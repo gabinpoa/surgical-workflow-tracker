@@ -1,2 +1,16 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<script lang="ts">
+	import { goto } from '$app/navigation';
+	import { pb } from '$lib/pb';
+	import { onMount } from 'svelte';
+
+	onMount(async () => {
+		pb.authStore.loadFromLocalStorage();
+		if (pb.authStore.isValid) {
+			goto('/home');
+		} else {
+			goto('/login');
+		}
+	});
+</script>
+
+<h1>carregando</h1>
