@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { pb, StepHistoryRecord, type SurgeryRecord } from '$lib/pb';
+	import { sendSurgeryUpdateMail } from '$lib/helpers/sendMail.helper';
+	import { pb, StepHistoryRecord, SurgeryRecord } from '$lib/pb';
 	import { steps } from '$lib/selectChoices';
 	import { pbDateString, pbStringDateToDate } from '../utils/pb.utils';
 
@@ -18,10 +19,18 @@
 				informedDate: pbDateString(new Date(informedDate)),
 				step: surgery.currentStep
 			});
+
 			const currentStep = steps[steps.findIndex((el) => el === surgery.currentStep) + 1];
-			await pb.collection('surgeries').update(surgery.id, {
-				currentStep: currentStep
-			});
+			const updatedSurgery = await pb.collection('surgeries').update<SurgeryRecord>(
+				surgery.id,
+				{
+					currentStep: currentStep
+				},
+				{
+					expand: 'surgeon'
+				}
+			);
+			sendSurgeryUpdateMail(updatedSurgery, pb.authStore.model?.name);
 			await refreshSurgeries();
 		} catch (err) {
 			console.error(err);
@@ -29,15 +38,30 @@
 	}
 </script>
 
-<div>
-	<p>{surgery.currentStep}</p>
-	<p>{surgery.surgeryName}</p>
-	<p>{surgery.surgeon}</p>
-	<p>{surgery.patient}</p>
-	<p>{pbStringDateToDate(surgery.estimatedDate).toLocaleString()}</p>
-	<label>
-		Data e hora
-		<input bind:value={informedDate} type="datetime-local" />
-	</label>
-	<button on:click={handleSubmit}>Concluir etapa</button>
+<div class="card card-bordered">
+	<div class="card-body">
+		<p class="card-title">{surgery.surgeryName}</p>
+		<p class="font-light">
+			Etapa em andamento: <span class="font-normal">{surgery.currentStep}</span>
+		</p>
+		<p class="font-light">
+			Cirurgião: <span class="font-normal">{surgery.expand.surgeon.name}</span>
+		</p>
+		<p class="font-light">Paciente: <span class="font-normal">{surgery.patient}</span></p>
+		<p class="font-light">
+			Data estimada: <span class="font-normal"
+				>{pbStringDateToDate(surgery.estimatedDate).toLocaleString()}</span
+			>
+		</p>
+		<div>
+			<label for="informedDate">Selecione data e hora: </label>
+			<input
+				name="informed-date"
+				class="input input-bordered input-sm"
+				bind:value={informedDate}
+				type="datetime-local"
+			/>
+		</div>
+		<button class="btn mt-2 btn-success btn-sm" on:click={handleSubmit}>Concluir etapa</button>
+	</div>
 </div>

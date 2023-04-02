@@ -68,15 +68,15 @@ export const surgeonNames = [
 	'Tobias Ludwig'
 ];
 export enum CurrentStep {
-	Criacao = 'criacao',
-	DocsEnviadosHJS = 'docsEnviadosHSJ',
-	SolicitadoOPME = 'solicitadoOPME',
-	RetornoOPME = 'retornoOPME',
-	DocsEnviadosConvenio = 'docsEnviadosConvenio',
-	RespostaConvenio = 'respostaConvenio',
-	EnvioJustificativas = 'envioJustificativas',
-	RespostaJustificativas = 'respostaJustificativas',
-	Concluido = 'concluido'
+	Criacao = 'Criação',
+	DocsEnviadosHJS = 'Enviar documentos para a secretária do HSJ',
+	SolicitadoOPME = 'Solicitar orçamento OPME',
+	RetornoOPME = 'Retorno do orçamento do OPME',
+	DocsEnviadosConvenio = 'Encaminhar documentos para convênio',
+	RespostaConvenio = 'Resposta do convênio',
+	EnvioJustificativas = 'Envio de Justificativas/documentos',
+	RespostaJustificativas = 'Resposta após justificativa',
+	Concluido = 'Concluído'
 }
 export const steps = [
 	CurrentStep.Criacao,

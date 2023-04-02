@@ -5,7 +5,7 @@ export default {
 		extend: {
 			fontFamily: {
 				opensans: `'Open Sans', sans-serif;`,
-				prata: `'Prata', serif;`
+				crimsontext: `'Crimson Text', serif;`
 			},
 			backgroundImage: {
 				login: `url('$lib/assets/medical-bg.jpg')`

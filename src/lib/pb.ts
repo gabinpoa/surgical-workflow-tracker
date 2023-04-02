@@ -36,10 +36,14 @@ export class SurgeryRecord extends Record {
 	surgeon!: string;
 	currentStep!: CurrentStep;
 	estimatedDate!: string;
+	declare expand: {
+		surgeon: DoctorRecord;
+	};
 }
 
 export class UserRecord extends Record {
 	name!: string;
+	visibleSteps!: string[];
 }
 
 export class StepHistoryRecord extends Record {
@@ -54,4 +58,18 @@ export enum ResponseStatus {
 	Autorizada = 'autorizada',
 	PendenteJustificativas = 'pendenteJustificativas',
 	NovasJustificativas = 'novasJustificativas'
+}
+
+export class DoctorRecord extends Record {
+	name!: string;
+	email!: string;
+	phoneNumber!: number;
+}
+
+export class SurgeryWithHistoryRecord extends SurgeryRecord {
+	declare expand: { surgeon: DoctorRecord; 'stepHistory(surgery)': StepHistoryWithUserRecord[] };
+}
+
+export class StepHistoryWithUserRecord extends StepHistoryRecord {
+	declare expand: { user: UserRecord };
 }
