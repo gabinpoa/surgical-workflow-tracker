@@ -19,7 +19,7 @@ export async function sendSurgeryUpdateMail(updatedSurgery: SurgeryRecord, userN
 		time: dateTimeArr[1].slice(0, 5)
 	};
 	const body: SendMailRequest = {
-		text: `Olá Dr. ${name}, seu procedimento de ${surgeryName} para o paciente ${patient} foi atualizado hoje com o status: ${currentStep}, as ${time} do dia ${date}, pelo usuário ${userName}. Para checar o andamento completo deste procedimento, <a href="http://localhost:5173/${id}" >clique aqui</a>`,
+		text: `Olá Dr. ${name}, seu procedimento de ${surgeryName} para o paciente ${patient} foi atualizado hoje com o status: ${currentStep}, as ${time} do dia ${date}, pelo usuário ${userName}. Para checar o andamento completo deste procedimento, <a href="https://doctors-workflow.vercel.app/${id}" >clique aqui</a>`,
 		email: email,
 		subject: 'Nova cirurgia criada'
 	};
