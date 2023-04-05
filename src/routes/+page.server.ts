@@ -4,7 +4,7 @@ import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (!locals.pb.authStore.isValid || locals.pb.authStore.model === null) {
-		throw redirect(300, '/login');
+		throw redirect(302, '/login');
 	}
 	try {
 		const surgeries = await locals.pb.collection('surgeries').getFullList<SurgeryRecord>({

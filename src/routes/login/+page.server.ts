@@ -1,7 +1,7 @@
 import { fail, redirect } from '@sveltejs/kit';
+import type { Actions } from './$types';
 
-/** @type {import('./$types').Actions} */
-export const actions = {
+export const actions: Actions = {
 	default: async ({ request, locals }) => {
 		const data = await request.formData();
 		const emailOrUsername = data.get('email');
