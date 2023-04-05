@@ -33,7 +33,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 export const actions: Actions = {
 	default: async ({ locals, request }) => {
 		if (!locals.pb.authStore.isValid) {
-			throw redirect(300, '/login');
+			throw redirect(302, '/login');
 		}
 
 		const data = Object.fromEntries(await request.formData());
