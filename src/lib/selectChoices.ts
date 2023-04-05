@@ -89,3 +89,8 @@ export const steps = [
 	CurrentStep.RespostaJustificativas,
 	CurrentStep.Concluido
 ];
+export enum ResponseStatus {
+	Autorizada = 'Autorizada',
+	Pendente = 'Pendente de justificativas / documentos',
+	NovasJustificativas = 'Necessita novas justificativas'
+}

@@ -1,44 +1,42 @@
 <script lang="ts">
-	import { sendSurgeryUpdateMail } from '$lib/helpers/sendMail.helper';
-	import { pb, StepHistoryRecord, SurgeryRecord } from '$lib/pb';
-	import { steps } from '$lib/selectChoices';
-	import { pbDateString, pbStringDateToDate } from '../utils/pb.utils';
+	import type { SurgeryRecord } from '$lib/pb';
+	import { CurrentStep, ResponseStatus } from '$lib/selectChoices';
+	import { pbStringDateToDate } from '../lib/utils/pb.utils';
+	import type { NextStepRequestBody } from '../routes/api/next-step/+server';
 
-	export let refreshSurgeries: () => Promise<void>;
 	export let surgery: SurgeryRecord;
+	export let updateSurgeries: (response: SurgeryRecord[]) => void;
 
 	const initialDate = new Date();
 	initialDate.setMinutes(0, 0, 0);
 	let informedDate = initialDate.toISOString().slice(0, -1);
+	let responseStatus = '';
 
-	async function handleSubmit() {
-		try {
-			await pb.collection('stepHistory').create<StepHistoryRecord>({
-				user: pb.authStore.model?.id,
-				surgery: surgery.id,
-				informedDate: pbDateString(new Date(informedDate)),
-				step: surgery.currentStep
-			});
+	async function handleNextStep() {
+		const data: NextStepRequestBody = {
+			surgery: {
+				currentStep: surgery.currentStep,
+				id: surgery.id
+			},
+			informedDate,
+			responseStatus
+		};
 
-			const currentStep = steps[steps.findIndex((el) => el === surgery.currentStep) + 1];
-			const updatedSurgery = await pb.collection('surgeries').update<SurgeryRecord>(
-				surgery.id,
-				{
-					currentStep: currentStep
+		const response: SurgeryRecord[] = await (
+			await fetch('/api/next-step', {
+				method: 'POST',
+				headers: {
+					'content-type': 'application/json'
 				},
-				{
-					expand: 'surgeon'
-				}
-			);
-			sendSurgeryUpdateMail(updatedSurgery, pb.authStore.model?.name);
-			await refreshSurgeries();
-		} catch (err) {
-			console.error(err);
-		}
+				body: JSON.stringify(data)
+			})
+		).json();
+
+		updateSurgeries(response);
 	}
 </script>
 
-<div class="card card-bordered">
+<div class="card card-bordered shadow">
 	<div class="card-body">
 		<p class="card-title">{surgery.surgeryName}</p>
 		<p class="font-light">
@@ -53,6 +51,27 @@
 				>{pbStringDateToDate(surgery.estimatedDate).toLocaleString()}</span
 			>
 		</p>
+		{#if surgery.currentStep === CurrentStep.RespostaConvenio || surgery.currentStep === CurrentStep.RespostaJustificativas}
+			<div>
+				<label for="responseStatus">Resposta do convênio</label>
+				<select
+					class="select select-bordered select-sm"
+					bind:value={responseStatus}
+					name="responseStatus"
+				>
+					<option value="">Selecione uma resposta do convênio</option>
+					<option value={ResponseStatus.Autorizada}>{ResponseStatus.Autorizada}</option>
+					<option
+						value={surgery.currentStep === CurrentStep.RespostaConvenio
+							? ResponseStatus.Pendente
+							: ResponseStatus.NovasJustificativas}
+						>{surgery.currentStep === CurrentStep.RespostaConvenio
+							? ResponseStatus.Pendente
+							: ResponseStatus.NovasJustificativas}</option
+					>
+				</select>
+			</div>
+		{/if}
 		<div>
 			<label for="informedDate">Selecione data e hora: </label>
 			<input
@@ -62,6 +81,13 @@
 				type="datetime-local"
 			/>
 		</div>
-		<button class="btn mt-2 btn-success btn-sm" on:click={handleSubmit}>Concluir etapa</button>
+		<button
+			on:click={handleNextStep}
+			disabled={surgery.currentStep === CurrentStep.RespostaConvenio ||
+			surgery.currentStep === CurrentStep.RespostaJustificativas
+				? responseStatus.length === 0
+				: false}
+			class="btn mt-2 btn-success btn-sm">Concluir etapa</button
+		>
 	</div>
 </div>
