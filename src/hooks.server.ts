@@ -3,7 +3,7 @@ import PocketBase, { Admin, Record } from 'pocketbase';
 
 /** @type {import('@sveltejs/kit').Handle} */
 export async function handle({ event, resolve }) {
-	event.locals.pb = new PocketBase(import.meta.env.VITE_PB_URL);
+	event.locals.pb = new PocketBase('https://wispy-fire-1719.fly.dev/');
 
 	event.locals.pb.authStore.loadFromCookie(event.request.headers.get('cookie') || '');
 

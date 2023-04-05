@@ -23,7 +23,7 @@ export async function sendSurgeryUpdateMail(updatedSurgery: SurgeryRecord, userN
 	};
 	const text = `Olá Dr. ${name}, seu procedimento de ${surgeryName} para o paciente ${patient} foi atualizado hoje com o status: ${currentStep}, as ${time} do dia ${date}, pelo usuário ${userName}. Para checar o andamento completo deste procedimento, <a href="${
 		import.meta.env.VITE_DOMAIN
-	}/cirurgias/${id}" >clique aqui</a>`;
+	}cirurgias/${id}" >clique aqui</a>`;
 	const subject =
 		currentStep === CurrentStep.DocsEnviadosHJS
 			? `Criada nova cirurgia ${patient}`
