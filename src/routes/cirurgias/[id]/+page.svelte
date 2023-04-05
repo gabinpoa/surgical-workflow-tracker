@@ -13,17 +13,10 @@
 </script>
 
 {#if surgery}
-	<div class="flex items-center flex-col min-h-screen bg-login">
+	<div class="flex items-center flex-col min-h-screen bg-login pt-9 pb-6">
 		<BackToHome />
-		<div class="h-52 flex flex-col justify-center">
-			<div class="bg-black text-white text-2xl bg-opacity-80 font-semibold p-3 rounded-xl">
-				<h1>
-					Bem-vindo(a), {data.user.profile === 'doctors' ? 'Dr. ' + data.user.name : data.user.name}
-				</h1>
-			</div>
-		</div>
 		<main
-			class="flex flex-col items-center flex-1 rounded-t-xl bg-white p-6 pt-12 w-1/2 gap-y-8 max-w-4xl"
+			class="flex flex-col items-center flex-1 rounded-xl bg-white p-6 pt-9 w-1/2 gap-y-8 max-w-4xl"
 		>
 			<div class="w-full space-y-6">
 				<div class="card card-bordered shadow mb-10">
@@ -32,7 +25,7 @@
 							<h3 class="card-title">{surgery.surgeryName}</h3>
 							<div class="tooltip tooltip-bottom" data-tip="Progresso">
 								<progress
-									class="progress w-52"
+									class="progress w-52 progress-info"
 									max="100"
 									value={100 /
 										((steps.length - 2) / steps.findIndex((el) => el === surgery?.currentStep))}
