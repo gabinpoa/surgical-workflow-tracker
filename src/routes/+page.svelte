@@ -17,7 +17,7 @@
 	>
 		<a href="/nova-cirurgia" class="btn capitalize">Criar nova operação</a>
 		<h2 class="text-xl">
-			{surgeries.length > 0 ? 'Operações pendentes' : 'Nenhuma operação pendente'}
+			{surgeries.length > 0 ? 'Operações em andamento' : 'Nenhuma operação em andamento'}
 		</h2>
 		<div class="w-full space-y-3">
 			{#each surgeries as surgeryItem}

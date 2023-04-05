@@ -11,7 +11,7 @@ export interface NextStepRequestBody {
 	responseStatus: string;
 }
 
-export const POST: RequestHandler = async ({ request, locals, url }) => {
+export const POST: RequestHandler = async ({ request, locals }) => {
 	const data = (await request.json()) as NextStepRequestBody;
 	try {
 		const stepHistoryBody: {

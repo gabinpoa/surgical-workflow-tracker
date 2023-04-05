@@ -9,7 +9,7 @@
 <div class="card card-compact bg-base-200">
 	<div class="card-body">
 		<p class="text-base">
-			Etapa concluída: <span class="font-semibold">{step.step}</span>
+			Etapa atendida: <span class="font-semibold">{step.step}</span>
 		</p>
 		<p class="font-light">Usuário: <span class="font-normal">{step.expand.user.name}</span></p>
 		<p class="font-light">
@@ -20,7 +20,7 @@
 		{#if step.informedDate}
 			<p class="font-light">
 				Data informada: <span class="font-normal">
-					{pbStringDateToDate(step.informedDate).toLocaleString()}
+					{pbStringDateToDate(step.informedDate).toLocaleString('pt-BR', { hour12: false })}
 				</span>
 			</p>
 		{/if}

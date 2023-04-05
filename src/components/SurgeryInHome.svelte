@@ -50,7 +50,9 @@
 		<p class="font-light">Paciente: <span class="font-normal">{surgery.patient}</span></p>
 		<p class="font-light">
 			Data estimada: <span class="font-normal"
-				>{pbStringDateToDate(surgery.estimatedDate).toLocaleString()}</span
+				>{pbStringDateToDate(surgery.estimatedDate).toLocaleString('pt-BR', {
+					hour12: false
+				})}</span
 			>
 		</p>
 		{#if surgery.currentStep === CurrentStep.RespostaConvenio || surgery.currentStep === CurrentStep.RespostaJustificativas}
@@ -91,7 +93,7 @@
 					surgery.currentStep === CurrentStep.RespostaJustificativas
 						? responseStatus.length === 0
 						: false}
-					class="btn btn-success btn-sm">Concluir etapa</button
+					class="btn btn-success btn-sm">Atendido</button
 				>
 			{/if}
 			<a

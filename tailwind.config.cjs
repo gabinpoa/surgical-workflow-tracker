@@ -8,7 +8,7 @@ export default {
 				crimsontext: `'Crimson Text', serif;`
 			},
 			backgroundImage: {
-				login: `url('$lib/assets/medical-bg.jpg')`
+				login: `url('$lib/assets/simple-bg.jpg')`
 			}
 		}
 	},
