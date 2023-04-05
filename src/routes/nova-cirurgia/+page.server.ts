@@ -1,3 +1,4 @@
+import { sendSurgeryUpdateMail } from '$lib/helpers/sendMail.helper';
 import type { StepHistoryRecord, SurgeryRecord, DoctorRecord } from '$lib/pb';
 import { CurrentStep } from '$lib/selectChoices';
 import { pbDateString } from '$lib/utils/pb.utils';
@@ -62,6 +63,8 @@ export const actions: Actions = {
 					expand: 'surgeon'
 				}
 			);
+
+			sendSurgeryUpdateMail(createdSurgery, locals.pb.authStore.model?.name);
 
 			await locals.pb.collection('stepHistory').create<StepHistoryRecord>({
 				user: locals.pb.authStore.model?.id,

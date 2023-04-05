@@ -1,3 +1,4 @@
+import { sendSurgeryUpdateMail } from '$lib/helpers/sendMail.helper';
 import type { SurgeryRecord } from '$lib/pb';
 import { CurrentStep, ResponseStatus, steps } from '$lib/selectChoices';
 import { error } from '@sveltejs/kit';
@@ -51,6 +52,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		const surgeries = await locals.pb.collection('surgeries').getFullList<SurgeryRecord>({
 			expand: 'surgeon'
 		});
+
+		sendSurgeryUpdateMail(updatedSurgery, locals.pb.authStore.model?.name);
 
 		return new Response(JSON.stringify(surgeries));
 	} catch (err) {

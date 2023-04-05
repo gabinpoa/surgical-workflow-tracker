@@ -45,12 +45,12 @@ export async function sendSurgeryUpdateMail(updatedSurgery: SurgeryRecord, userN
 				Data: subject
 			}
 		},
-		Source: 'SENDER_EMAIL',
-		ReplyToAddresses: ['EMAIL_ADRESS']
+		Source: 'app@orbits.hospital',
+		ReplyToAddresses: ['app@orbits.hospital']
 	};
 
 	try {
-		const sendPromise = await ses.sendEmail(params).promise();
+		await ses.sendEmail(params).promise();
 	} catch (err) {
 		console.error(err);
 	}
