@@ -3,6 +3,7 @@
 	import Label from '../../components/Label.svelte';
 	import MdArrowBack from 'svelte-icons/md/MdArrowBack.svelte';
 	import type { PageData } from './$types';
+	import BackToHome from '../../components/BackToHome.svelte';
 
 	export let data: PageData;
 	let patient = '';
@@ -20,9 +21,7 @@
 </script>
 
 <main class="h-screen bg-login flex flex-col justify-center items-center">
-	<a href="/home" class="absolute top-20 left-20 bg-black bg-opacity-90 btn btn-circle p-2">
-		<MdArrowBack />
-	</a>
+	<BackToHome />
 	<form method="POST" class="form-control bg-white rounded-xl p-10 gap-y-3">
 		<h1 class="text-xl font-semibold text-neutral-600 mb-1">Criar nova cirurgia solicitada</h1>
 		<div>
