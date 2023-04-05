@@ -18,6 +18,10 @@
 			<h1 class="font-crimsontext text-xl lg:mb-2">Orbit</h1>
 			<h1 class="text-2xl font-semibold text-neutral-800">Login</h1>
 			<form method="POST" class="flex-col flex gap-y-3">
+				<select class="select select-sm select-bordered w-40" name="profile">
+					<option value="user">Funcionário</option>
+					<option value="doctor">Doutor</option>
+				</select>
 				<TextInput
 					placeholder="Digite seu email ou usuário"
 					bind:inputValue={emailOrUsername}

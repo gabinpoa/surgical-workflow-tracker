@@ -6,30 +6,32 @@ export const actions: Actions = {
 		const data = await request.formData();
 		const emailOrUsername = data.get('email');
 		const password = data.get('password');
+		const profile = data.get('profile');
 
-		if (typeof emailOrUsername !== 'string' || typeof password !== 'string') {
+		if (!(emailOrUsername?.length !== 0) || !(password?.length !== 0)) {
 			return fail(400, {
 				missing: true,
 				message: 'Campos não preenchidos'
 			});
 		}
 
-		const authResponse = await locals.pb
-			.collection('users')
-			.authWithPassword(emailOrUsername, password);
-
-		if (!authResponse.token) {
-			try {
-				await locals.pb.collection('doctors').authWithPassword(emailOrUsername, password);
-			} catch (err) {
-				console.log(err);
-
-				return fail(401, {
-					message: 'Credenciais incorretas'
-				});
+		try {
+			if (profile === 'doctor') {
+				await locals.pb
+					.collection('doctors')
+					.authWithPassword(emailOrUsername as string, password as string);
+			} else {
+				await locals.pb
+					.collection('users')
+					.authWithPassword(emailOrUsername as string, password as string);
 			}
+		} catch (_) {
+			console.log(_);
+			return fail(400, {
+				message: 'Credenciais incorretas'
+			});
 		}
 
-		throw redirect(303, '/');
+		throw redirect(302, '/');
 	}
 };

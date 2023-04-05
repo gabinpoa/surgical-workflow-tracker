@@ -16,7 +16,8 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 			surgery: serializeNonPOJOs(surgery) as SurgeryWithHistoryRecord,
 			stepHistories: serializeNonPOJOs(surgery.expand['stepHistory(surgery)'].reverse()),
 			user: {
-				name: locals.pb.authStore.model?.name as string
+				name: locals.pb.authStore.model?.name as string,
+				profile: locals.pb.authStore.model.collectionName
 			}
 		};
 	} catch (err) {

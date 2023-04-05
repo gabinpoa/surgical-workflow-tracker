@@ -9,7 +9,7 @@
 	<div class="h-52 flex flex-col justify-center">
 		<div class="bg-black text-white text-2xl bg-opacity-80 font-semibold p-3 rounded-xl">
 			<h1>Bem-vindo(a),</h1>
-			<h1>{data.user.name}</h1>
+			<h1>{data.user.profile === 'doctors' ? 'Dr. ' + data.user.name : data.user.name}</h1>
 		</div>
 	</div>
 	<main
@@ -22,6 +22,7 @@
 		<div class="w-full space-y-3">
 			{#each surgeries as surgeryItem}
 				<SurgeryInHome
+					profile={data.user.profile}
 					updateSurgeries={(response) => {
 						surgeries = response;
 					}}

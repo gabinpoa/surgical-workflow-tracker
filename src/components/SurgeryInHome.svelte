@@ -3,8 +3,10 @@
 	import { CurrentStep, ResponseStatus } from '$lib/selectChoices';
 	import { pbStringDateToDate } from '../lib/utils/pb.utils';
 	import type { NextStepRequestBody } from '../routes/api/next-step/+server';
+	import { dev } from '$app/environment';
 
 	export let surgery: SurgeryRecord;
+	export let profile: string;
 	export let updateSurgeries: (response: SurgeryRecord[]) => void;
 
 	const initialDate = new Date();
@@ -81,13 +83,24 @@
 				type="datetime-local"
 			/>
 		</div>
-		<button
-			on:click={handleNextStep}
-			disabled={surgery.currentStep === CurrentStep.RespostaConvenio ||
-			surgery.currentStep === CurrentStep.RespostaJustificativas
-				? responseStatus.length === 0
-				: false}
-			class="btn mt-2 btn-success btn-sm">Concluir etapa</button
-		>
+		<div class="card-actions mt-2 items-center gap-x-4">
+			{#if profile === 'users'}
+				<button
+					on:click={handleNextStep}
+					disabled={surgery.currentStep === CurrentStep.RespostaConvenio ||
+					surgery.currentStep === CurrentStep.RespostaJustificativas
+						? responseStatus.length === 0
+						: false}
+					class="btn btn-success btn-sm">Concluir etapa</button
+				>
+			{/if}
+			<a
+				class="btn btn-primary btn-sm"
+				href={`${dev ? 'http://localhost:5173' : 'https://orbits.hospital'}/cirurgias/${
+					surgery.id
+				}`}
+				rel="noopener noreferrer">Visualizar</a
+			>
+		</div>
 	</div>
 </div>

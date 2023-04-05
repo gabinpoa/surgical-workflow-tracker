@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { steps } from '$lib/selectChoices';
+	import BackToHome from '../../../components/BackToHome.svelte';
 	import StepHistory from '../../../components/StepHistory.svelte';
 	import { pbStringDateToDate } from '../../../lib/utils/pb.utils';
 	import type { PageServerData } from './$types';
@@ -13,9 +14,12 @@
 
 {#if surgery}
 	<div class="flex items-center flex-col min-h-screen bg-login">
+		<BackToHome />
 		<div class="h-52 flex flex-col justify-center">
 			<div class="bg-black text-white text-2xl bg-opacity-80 font-semibold p-3 rounded-xl">
-				<h1>Bem-vindo(a), Dr. {user.name}</h1>
+				<h1>
+					Bem-vindo(a), {data.user.profile === 'doctors' ? 'Dr. ' + data.user.name : data.user.name}
+				</h1>
 			</div>
 		</div>
 		<main
