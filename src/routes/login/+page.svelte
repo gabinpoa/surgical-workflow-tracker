@@ -1,26 +1,15 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { pb, UserRecord } from '$lib/pb';
 	import TextInput from '../../components/TextInput.svelte';
 	import IoMdEye from 'svelte-icons/io/IoMdEye.svelte';
 	import IoMdEyeOff from 'svelte-icons/io/IoMdEyeOff.svelte';
-
+	import type { ActionData } from './$types';
 	let emailOrUsername = '';
 	let password = '';
 	let passwordVisible = false;
 	let error = false;
 
-	async function handleSubmit(e: SubmitEvent) {
-		try {
-			const { token, record } = await pb
-				.collection('users')
-				.authWithPassword<UserRecord>(emailOrUsername, password);
-			pb.authStore.save(token, record);
-			goto('/home');
-		} catch (e) {
-			error = true;
-		}
-	}
+	export let form: ActionData;
 </script>
 
 <div class="min-h-screen flex justify-center items-center bg-login">
@@ -28,7 +17,7 @@
 		<div class="p-4 pt-6 overflow-hidden grid gap-4 lg:w-96 lg:gap-6">
 			<h1 class="font-crimsontext text-xl lg:mb-2">Orbit</h1>
 			<h1 class="text-2xl font-semibold text-neutral-800">Login</h1>
-			<form class="flex-col flex gap-y-3" on:submit={handleSubmit}>
+			<form method="POST" class="flex-col flex gap-y-3">
 				<TextInput
 					placeholder="Digite seu email ou usuário"
 					bind:inputValue={emailOrUsername}
@@ -70,8 +59,8 @@
 						>
 					</div>
 				</label>
-				{#if error}
-					<p class="text-red-600 text-sm">Credenciais incorretas</p>
+				{#if form?.message}
+					<p class="text-red-600 text-sm">{form.message}</p>
 				{/if}
 				<button
 					disabled={password.length <= 4 && emailOrUsername.length <= 3}

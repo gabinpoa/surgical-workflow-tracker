@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { StepHistoryWithUserRecord } from '$lib/pb';
 	import { CurrentStep } from '$lib/selectChoices';
-	import { pbStringDateToDate } from '../utils/pb.utils';
+	import { pbStringDateToDate } from '../lib/utils/pb.utils';
 
 	export let step: StepHistoryWithUserRecord;
 </script>

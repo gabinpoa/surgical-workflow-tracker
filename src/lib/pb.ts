@@ -73,3 +73,7 @@ export class SurgeryWithHistoryRecord extends SurgeryRecord {
 export class StepHistoryWithUserRecord extends StepHistoryRecord {
 	declare expand: { user: UserRecord };
 }
+
+export function serializeNonPOJOs(obj: any) {
+	return structuredClone(obj);
+}

@@ -1,44 +1,21 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-	import { pb, StepHistoryWithUserRecord, SurgeryWithHistoryRecord } from '$lib/pb';
 	import { steps } from '$lib/selectChoices';
-	import { onMount } from 'svelte';
 	import StepHistory from '../../../components/StepHistory.svelte';
-	import { pbStringDateToDate } from '../../../utils/pb.utils';
+	import { pbStringDateToDate } from '../../../lib/utils/pb.utils';
+	import type { PageServerData } from './$types';
 
-	const {
-		url: { pathname }
-	} = $page;
-	const id = pathname.slice(1).split('/')[1];
+	export let data: PageServerData;
 
-	let surgery: undefined | SurgeryWithHistoryRecord;
-	let stepHistories: undefined | StepHistoryWithUserRecord[];
-
-	onMount(async () => {
-		if (!pb.authStore.isValid) {
-			pb.authStore.loadFromLocalStorage();
-		}
-		try {
-			surgery = await pb.collection('surgeries').getOne(id, {
-				expand: 'stepHistory(surgery).user,surgeon'
-			});
-			stepHistories = surgery?.expand['stepHistory(surgery)'].reverse();
-		} catch (err) {
-			console.error(err);
-		}
-	});
+	let surgery = data.surgery;
+	const user = data.user;
+	const stepHistories = data.stepHistories;
 </script>
 
 {#if surgery}
 	<div class="flex items-center flex-col min-h-screen bg-login">
 		<div class="h-52 flex flex-col justify-center">
 			<div class="bg-black text-white text-2xl bg-opacity-80 font-semibold p-3 rounded-xl">
-				{#if pb.authStore.model}
-					<h1>Bem-vindo(a),</h1>
-					<h1>{pb.authStore.model.name}</h1>
-				{:else}
-					<h1>Bem vindo, Doutor</h1>
-				{/if}
+				<h1>Bem-vindo(a), Dr. {user.name}</h1>
 			</div>
 		</div>
 		<main
