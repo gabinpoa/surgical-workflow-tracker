@@ -69,7 +69,6 @@ export const actions: Actions = {
 				surgery: createdSurgery.id,
 				step: CurrentStep.Criacao
 			});
-
 			sendSurgeryUpdateMail(createdSurgery, locals.pb.authStore.model?.name);
 		} catch (err) {
 			console.log(err);
