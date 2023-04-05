@@ -1,4 +1,3 @@
-import { sendSurgeryUpdateMail } from '$lib/helpers/sendMail.helper';
 import type { StepHistoryRecord, SurgeryRecord, DoctorRecord } from '$lib/pb';
 import { CurrentStep } from '$lib/selectChoices';
 import { pbDateString } from '$lib/utils/pb.utils';
@@ -69,7 +68,6 @@ export const actions: Actions = {
 				surgery: createdSurgery.id,
 				step: CurrentStep.Criacao
 			});
-			sendSurgeryUpdateMail(createdSurgery, locals.pb.authStore.model?.name);
 		} catch (err) {
 			console.log(err);
 			return fail(400, {

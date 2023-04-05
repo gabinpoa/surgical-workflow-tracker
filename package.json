@@ -33,6 +33,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"aws-sdk": "^2.1351.0",
 		"daisyui": "^2.51.5",
 		"dotenv": "^16.0.3",
 		"nodemailer": "^6.9.1",
