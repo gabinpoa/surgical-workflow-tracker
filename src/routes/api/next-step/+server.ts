@@ -3,6 +3,7 @@ import type { SurgeryRecord } from '$lib/pb';
 import { CurrentStep, ResponseStatus, steps } from '$lib/selectChoices';
 import { error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
+import { SECRET_EMAIL_ADDRESS, SECRET_EMAIL_PASSWORD } from '$env/static/private';
 export interface NextStepRequestBody {
 	surgery: {
 		currentStep: CurrentStep;
@@ -53,7 +54,12 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			expand: 'surgeon'
 		});
 
-		sendSurgeryUpdateMail(updatedSurgery, locals.pb.authStore.model?.name);
+		sendSurgeryUpdateMail(
+			updatedSurgery,
+			locals.pb.authStore.model?.name,
+			SECRET_EMAIL_ADDRESS,
+			SECRET_EMAIL_PASSWORD
+		);
 
 		return new Response(JSON.stringify(surgeries));
 	} catch (err) {
