@@ -4,7 +4,7 @@ import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals, params }) => {
 	if (!locals.pb.authStore.isValid || locals.pb.authStore.model === null) {
-		throw redirect(302, '/login');
+		throw redirect(302, '/login/' + params.id);
 	}
 
 	try {

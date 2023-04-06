@@ -1,8 +1,12 @@
 <script lang="ts">
+	import type { SurgeryRecord } from '$lib/pb';
+	import { CurrentStep } from '$lib/selectChoices';
 	import SurgeryInHome from '../components/SurgeryInHome.svelte';
 	import type { PageServerData } from './$types';
 	export let data: PageServerData;
-	let surgeries = data.surgeries;
+
+	let surgeries = data.surgeries.filter((el) => el.currentStep !== CurrentStep.Concluido);
+	let finishedSurgeries = false;
 </script>
 
 <div class="flex items-center flex-col min-h-screen bg-pattern bg-contain">
@@ -16,9 +20,28 @@
 		class="flex flex-col items-center flex-1 rounded-t-xl bg-white p-6 pt-12 w-1/2 gap-y-8 max-w-4xl"
 	>
 		<a href="/nova-cirurgia" class="btn capitalize">Criar nova operação</a>
-		<h2 class="text-xl">
-			{surgeries.length > 0 ? 'Operações em andamento' : 'Nenhuma operação em andamento'}
-		</h2>
+		<div class="btn-group">
+			<button
+				on:click={() => {
+					finishedSurgeries = false;
+					surgeries = data.surgeries.filter((el) => el.currentStep !== CurrentStep.Concluido);
+				}}
+				style="background-color: {finishedSurgeries === false
+					? 'rgb(29, 78, 216)'
+					: 'rgb(115, 115, 115)'};"
+				class="btn btn-sm border-0 capitalize w-[17ch]">Em andamento</button
+			>
+			<button
+				on:click={() => {
+					finishedSurgeries = true;
+					surgeries = data.surgeries.filter((el) => el.currentStep === CurrentStep.Concluido);
+				}}
+				style="background-color: {finishedSurgeries === true
+					? 'rgb(29, 78, 216)'
+					: 'rgb(145, 145, 145)'};"
+				class="btn btn-sm border-0 capitalize w-[17ch]">Concluídas</button
+			>
+		</div>
 		<div class="w-full space-y-3">
 			{#each surgeries as surgeryItem}
 				<SurgeryInHome
