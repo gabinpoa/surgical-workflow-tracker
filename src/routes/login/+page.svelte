@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import TextInput from '../../components/TextInput.svelte';
 	import IoMdEye from 'svelte-icons/io/IoMdEye.svelte';
 	import IoMdEyeOff from 'svelte-icons/io/IoMdEyeOff.svelte';
@@ -7,15 +6,14 @@
 	let emailOrUsername = '';
 	let password = '';
 	let passwordVisible = false;
-	let error = false;
 
 	export let form: ActionData;
 </script>
 
-<div class="min-h-screen flex justify-center items-center bg-login">
+<div class="min-h-screen flex justify-center items-center bg-pattern bg-contain">
 	<main class="bg-white rounded-xl">
 		<div class="p-4 pt-6 overflow-hidden grid gap-4 lg:w-96 lg:gap-6">
-			<h1 class="font-crimsontext text-xl lg:mb-2">Orbit</h1>
+			<h1 class="font-crimsontext text-lg lg:mb-2">ORBITS</h1>
 			<h1 class="text-2xl font-semibold text-neutral-800">Login</h1>
 			<form method="POST" class="flex-col flex gap-y-3">
 				<select class="select select-sm select-bordered w-40" name="profile">

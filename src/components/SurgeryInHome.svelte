@@ -26,7 +26,6 @@
 
 		const response: {
 			surgeries: SurgeryRecord[];
-			emailSentResponse: any;
 		} = await (
 			await fetch('/api/next-step', {
 				method: 'POST',
