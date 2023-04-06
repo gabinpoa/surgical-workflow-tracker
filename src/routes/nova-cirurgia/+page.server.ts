@@ -4,6 +4,7 @@ import { CurrentStep } from '$lib/selectChoices';
 import { pbDateString } from '$lib/utils/pb.utils';
 import { error, fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
+import { SECRET_EMAIL_PASSWORD, SECRET_EMAIL_ADDRESS } from '$env/static/private';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (!locals.pb.authStore.isValid) {
@@ -64,7 +65,12 @@ export const actions: Actions = {
 				}
 			);
 
-			sendSurgeryUpdateMail(createdSurgery, locals.pb.authStore.model?.name);
+			sendSurgeryUpdateMail(
+				createdSurgery,
+				locals.pb.authStore.model?.name,
+				SECRET_EMAIL_ADDRESS,
+				SECRET_EMAIL_PASSWORD
+			);
 
 			await locals.pb.collection('stepHistory').create<StepHistoryRecord>({
 				user: locals.pb.authStore.model?.id,

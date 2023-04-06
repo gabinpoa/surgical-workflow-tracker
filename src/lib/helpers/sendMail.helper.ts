@@ -1,13 +1,15 @@
 import type { SurgeryRecord } from '$lib/pb';
 import { CurrentStep } from '$lib/selectChoices';
 import { error } from '@sveltejs/kit';
-import AWS from 'aws-sdk';
-import type { SendEmailRequest } from 'aws-sdk/clients/ses';
 import { pbStringDateToDate } from '../utils/pb.utils';
+import nodemailer from 'nodemailer';
 
-export async function sendSurgeryUpdateMail(updatedSurgery: SurgeryRecord, userName: string) {
-	const ses = new AWS.SES();
-
+export async function sendSurgeryUpdateMail(
+	updatedSurgery: SurgeryRecord,
+	userName: string,
+	senderEmail: string,
+	emailPassword: string
+) {
 	const {
 		patient,
 		id,
@@ -29,28 +31,20 @@ export async function sendSurgeryUpdateMail(updatedSurgery: SurgeryRecord, userN
 			? `Novo procedimento - ${surgeryName}`
 			: `Procedimento avançou uma etapa - ${surgeryName}`;
 
-	const params: SendEmailRequest = {
-		Destination: {
-			ToAddresses: [email]
-		},
-		Message: {
-			Body: {
-				Html: {
-					Charset: 'UTF-8',
-					Data: text
-				}
-			},
-			Subject: {
-				Charset: 'UTF-8',
-				Data: subject
-			}
-		},
-		Source: 'app@orbits.hospital',
-		ReplyToAddresses: ['app@orbits.hospital']
-	};
-
+	const transporter = nodemailer.createTransport({
+		service: 'kinghost',
+		host: 'http://kinghost.uni5.net/',
+		port: 465,
+		secure: true,
+		auth: { user: senderEmail, pass: emailPassword }
+	});
+	await transporter.sendMail({
+		text: text,
+		html: `<p>${text}</p>`,
+		subject: subject,
+		to: email
+	});
 	try {
-		await ses.sendEmail(params).promise();
 	} catch (err) {
 		console.error(err);
 	}
