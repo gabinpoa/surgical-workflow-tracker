@@ -68,7 +68,8 @@ export async function sendSurgeryUpdateMail(
 	const command = new SendEmailCommand(input);
 
 	try {
-		await client.send(command);
+		const response = await client.send(command);
+		return response;
 	} catch (err) {
 		console.error(err);
 	}
