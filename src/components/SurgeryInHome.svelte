@@ -24,7 +24,10 @@
 			responseStatus
 		};
 
-		const response: SurgeryRecord[] = await (
+		const response: {
+			surgeries: SurgeryRecord[];
+			emailSentResponse: any;
+		} = await (
 			await fetch('/api/next-step', {
 				method: 'POST',
 				headers: {
@@ -34,7 +37,7 @@
 			})
 		).json();
 
-		updateSurgeries(response);
+		updateSurgeries(response.surgeries);
 	}
 </script>
 

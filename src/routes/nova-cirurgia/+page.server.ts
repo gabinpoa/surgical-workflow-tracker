@@ -70,12 +70,16 @@ export const actions: Actions = {
 				}
 			);
 
-			sendSurgeryUpdateMail(createdSurgery, locals.pb.authStore.model?.name, {
-				senderEmail: SECRET_EMAIL_ADDRESS,
-				secretAccessKey: SECRET_AWS_ACCESS_KEY,
-				accessKeyId: SECRET_AWS_KEY_ID,
-				sourceArn: SECRET_SOURCE_ARN
-			});
+			const emailSentResponse = await sendSurgeryUpdateMail(
+				createdSurgery,
+				locals.pb.authStore.model?.name,
+				{
+					senderEmail: SECRET_EMAIL_ADDRESS,
+					secretAccessKey: SECRET_AWS_ACCESS_KEY,
+					accessKeyId: SECRET_AWS_KEY_ID,
+					sourceArn: SECRET_SOURCE_ARN
+				}
+			);
 
 			await locals.pb.collection('stepHistory').create<StepHistoryRecord>({
 				user: locals.pb.authStore.model?.id,

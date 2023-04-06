@@ -60,14 +60,18 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			expand: 'surgeon'
 		});
 
-		sendSurgeryUpdateMail(updatedSurgery, locals.pb.authStore.model?.name, {
-			senderEmail: SECRET_EMAIL_ADDRESS,
-			secretAccessKey: SECRET_AWS_ACCESS_KEY,
-			accessKeyId: SECRET_AWS_KEY_ID,
-			sourceArn: SECRET_SOURCE_ARN
-		});
+		const emailSentResponse = await sendSurgeryUpdateMail(
+			updatedSurgery,
+			locals.pb.authStore.model?.name,
+			{
+				senderEmail: SECRET_EMAIL_ADDRESS,
+				secretAccessKey: SECRET_AWS_ACCESS_KEY,
+				accessKeyId: SECRET_AWS_KEY_ID,
+				sourceArn: SECRET_SOURCE_ARN
+			}
+		);
 
-		return new Response(JSON.stringify(surgeries));
+		return new Response(JSON.stringify({ surgeries, emailSentResponse }));
 	} catch (err) {
 		console.log(err);
 		throw error(400, 'Erro desconhecido');
