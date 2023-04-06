@@ -1,5 +1,11 @@
 import { fail, redirect } from '@sveltejs/kit';
-import type { Actions } from './$types';
+import type { Actions, PageServerLoad } from './$types';
+
+export const load: PageServerLoad = ({ locals, params: { id } }) => {
+	if (locals.pb.authStore.isValid) {
+		throw redirect(302, '/cirurgias/' + id);
+	}
+};
 
 export const actions: Actions = {
 	default: async ({ locals, request, params: { id } }) => {
