@@ -61,8 +61,7 @@ export async function sendSurgeryUpdateMail(
 				}
 			}
 		},
-		ReplyToAddresses: [],
-		SourceArn: config.sourceArn
+		ReplyToAddresses: []
 	};
 
 	const command = new SendEmailCommand(input);
