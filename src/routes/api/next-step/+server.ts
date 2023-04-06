@@ -1,4 +1,3 @@
-import { sendSurgeryUpdateMail } from '$lib/helpers/sendMail.helper';
 import type { SurgeryRecord } from '$lib/pb';
 import { CurrentStep, ResponseStatus, steps } from '$lib/selectChoices';
 import { error } from '@sveltejs/kit';
@@ -7,8 +6,12 @@ import {
 	SECRET_EMAIL_ADDRESS,
 	SECRET_AWS_ACCESS_KEY,
 	SECRET_AWS_KEY_ID,
-	SECRET_SOURCE_ARN
+	SECRET_SOURCE_ARN,
+	SECRET_EMAIL_PASSWORD
 } from '$env/static/private';
+import sendKingHostMail from '$lib/mail/sendKingHostMail';
+import getMailMessage from '$lib/mail/getMailMessage';
+import { sendSesMail } from '$lib/mail/sendSesMail';
 
 export interface NextStepRequestBody {
 	surgery: {
@@ -60,18 +63,17 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			expand: 'surgeon'
 		});
 
-		const emailSentResponse = await sendSurgeryUpdateMail(
-			updatedSurgery,
-			locals.pb.authStore.model?.name,
+		await sendSesMail(
 			{
-				senderEmail: SECRET_EMAIL_ADDRESS,
-				secretAccessKey: SECRET_AWS_ACCESS_KEY,
 				accessKeyId: SECRET_AWS_KEY_ID,
-				sourceArn: SECRET_SOURCE_ARN
-			}
+				senderEmail: SECRET_EMAIL_ADDRESS,
+				secretAccessKey: SECRET_AWS_ACCESS_KEY
+			},
+			getMailMessage(updatedSurgery, locals.pb.authStore.model?.name as string),
+			updatedSurgery.expand.surgeon.email
 		);
 
-		return new Response(JSON.stringify({ surgeries, emailSentResponse }));
+		return new Response(JSON.stringify(surgeries));
 	} catch (err) {
 		console.log(err);
 		throw error(400, 'Erro desconhecido');

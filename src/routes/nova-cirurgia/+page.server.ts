@@ -1,4 +1,3 @@
-import { sendSurgeryUpdateMail } from '$lib/helpers/sendMail.helper';
 import type { StepHistoryRecord, SurgeryRecord, DoctorRecord } from '$lib/pb';
 import { CurrentStep } from '$lib/selectChoices';
 import { pbDateString } from '$lib/utils/pb.utils';
@@ -8,8 +7,11 @@ import {
 	SECRET_EMAIL_ADDRESS,
 	SECRET_AWS_ACCESS_KEY,
 	SECRET_AWS_KEY_ID,
-	SECRET_SOURCE_ARN
+	SECRET_SOURCE_ARN,
+	SECRET_EMAIL_PASSWORD
 } from '$env/static/private';
+import getMailMessage from '$lib/mail/getMailMessage';
+import { sendSesMail } from '$lib/mail/sendSesMail';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (!locals.pb.authStore.isValid) {
@@ -70,22 +72,21 @@ export const actions: Actions = {
 				}
 			);
 
-			const emailSentResponse = await sendSurgeryUpdateMail(
-				createdSurgery,
-				locals.pb.authStore.model?.name,
-				{
-					senderEmail: SECRET_EMAIL_ADDRESS,
-					secretAccessKey: SECRET_AWS_ACCESS_KEY,
-					accessKeyId: SECRET_AWS_KEY_ID,
-					sourceArn: SECRET_SOURCE_ARN
-				}
-			);
-
 			await locals.pb.collection('stepHistory').create<StepHistoryRecord>({
 				user: locals.pb.authStore.model?.id,
 				surgery: createdSurgery.id,
 				step: CurrentStep.Criacao
 			});
+
+			await sendSesMail(
+				{
+					accessKeyId: SECRET_AWS_KEY_ID,
+					senderEmail: SECRET_EMAIL_ADDRESS,
+					secretAccessKey: SECRET_AWS_ACCESS_KEY
+				},
+				getMailMessage(createdSurgery, locals.pb.authStore.model?.name as string),
+				createdSurgery.expand.surgeon.email
+			);
 		} catch (err) {
 			console.log(err);
 			return fail(400, {

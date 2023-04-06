@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { surgeryNames } from '$lib/selectChoices';
 	import Label from '../../components/Label.svelte';
-	import MdArrowBack from 'svelte-icons/md/MdArrowBack.svelte';
 	import type { PageData } from './$types';
 	import BackToHome from '../../components/BackToHome.svelte';
 
@@ -20,7 +19,7 @@
 		time.length === 0;
 </script>
 
-<main class="h-screen bg-login flex flex-col justify-center items-center">
+<main class="h-screen bg-pattern flex flex-col justify-center items-center bg-contain">
 	<BackToHome />
 	<form method="POST" class="form-control bg-white rounded-xl p-10 gap-y-3">
 		<h1 class="text-xl font-semibold text-neutral-600 mb-1">Criar nova cirurgia solicitada</h1>
