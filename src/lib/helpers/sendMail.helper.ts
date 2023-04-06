@@ -30,21 +30,23 @@ export async function sendSurgeryUpdateMail(
 		currentStep === CurrentStep.DocsEnviadosHJS
 			? `Novo procedimento - ${surgeryName}`
 			: `Procedimento avançou uma etapa - ${surgeryName}`;
-
 	const transporter = nodemailer.createTransport({
-		service: 'kinghost',
-		host: 'http://kinghost.uni5.net/',
-		port: 465,
+		host: 'smtp.uni5.net',
+		from: senderEmail,
 		secure: true,
-		auth: { user: senderEmail, pass: emailPassword }
-	});
-	await transporter.sendMail({
-		text: text,
-		html: `<p>${text}</p>`,
-		subject: subject,
-		to: email
+		port: 465,
+		auth: { user: senderEmail, pass: emailPassword },
+		tls: {
+			rejectUnauthorized: false
+		}
 	});
 	try {
+		await transporter.sendMail({
+			text: text,
+			html: `<p>${text}</p>`,
+			subject: subject,
+			to: email
+		});
 	} catch (err) {
 		console.error(err);
 	}

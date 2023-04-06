@@ -54,7 +54,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			expand: 'surgeon'
 		});
 
-		sendSurgeryUpdateMail(
+		await sendSurgeryUpdateMail(
 			updatedSurgery,
 			locals.pb.authStore.model?.name,
 			SECRET_EMAIL_ADDRESS,
