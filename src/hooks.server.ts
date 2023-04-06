@@ -17,12 +17,15 @@ export async function handle({ event, resolve }) {
 			await event.locals.pb.collection('doctors').authRefresh();
 		}
 	} catch (err) {
-		console.log(err);
+		event.locals.pb.authStore.clear();
 	}
 
 	const response = await resolve(event);
 
-	response.headers.append('set-cookie', event.locals.pb.authStore.exportToCookie());
+	response.headers.append(
+		'set-cookie',
+		event.locals.pb.authStore.exportToCookie({ sameSite: 'Lax' })
+	);
 
 	return response;
 }
