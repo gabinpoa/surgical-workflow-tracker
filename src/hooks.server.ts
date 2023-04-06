@@ -17,7 +17,7 @@ export async function handle({ event, resolve }) {
 			await event.locals.pb.collection('doctors').authRefresh();
 		}
 	} catch (err) {
-		event.locals.pb.authStore.clear();
+		console.log(err);
 	}
 
 	const response = await resolve(event);
