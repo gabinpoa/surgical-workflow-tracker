@@ -47,7 +47,7 @@
 			Etapa em andamento: <span class="font-normal">{surgery.currentStep}</span>
 		</p>
 		<p class="font-light">
-			Cirurgião: <span class="font-normal">{surgery.expand.surgeon.name}</span>
+			Cirurgião: <span class="font-normal">Dr. {surgery.expand.surgeon.name}</span>
 		</p>
 		<p class="font-light">Paciente: <span class="font-normal">{surgery.patient}</span></p>
 		<p class="font-light">
@@ -88,7 +88,7 @@
 			/>
 		</div>
 		<div class="card-actions mt-2 items-center gap-x-4">
-			{#if profile === 'users'}
+			{#if profile === 'users' && surgery.currentStep !== CurrentStep.Concluido}
 				<button
 					on:click={handleNextStep}
 					disabled={surgery.currentStep === CurrentStep.RespostaConvenio ||

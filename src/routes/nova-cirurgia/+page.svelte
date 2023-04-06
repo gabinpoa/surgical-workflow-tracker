@@ -38,7 +38,7 @@
 			<select class="select w-full input-bordered" bind:value={surgeryName} name="surgeryName">
 				<option value="" selected>Selecione um procedimento</option>
 				{#each surgeryNames as name}
-					<option value={name}>{name}</option>
+					<option class="capitalize" value={name}>{name}</option>
 				{/each}
 			</select>
 		</div>
@@ -52,7 +52,7 @@
 			>
 				<option value="" selected>Selecione um cirurgião</option>
 				{#each data.doctors as eachSurgeon}
-					<option value={JSON.stringify(eachSurgeon)}>{eachSurgeon.name}</option>
+					<option value={JSON.stringify(eachSurgeon)}>Dr. {eachSurgeon.name}</option>
 				{/each}
 			</select>
 		</div>
