@@ -28,7 +28,7 @@
 			<p class="font-light">
 				{step.step === CurrentStep.RespostaJustificativas
 					? 'Resposta após justificativa: '
-					: 'Resposta do convênio'}<span class="font-normal">{step.responseStatus}</span>
+					: 'Resposta do convênio: '}<span class="font-normal">{step.responseStatus}</span>
 			</p>
 		{/if}
 	</div>
