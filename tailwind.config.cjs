@@ -9,7 +9,7 @@ export default {
 			},
 			backgroundImage: {
 				login: `url('$lib/assets/simple-bg.jpg')`,
-				pattern: `url('$lib/assets/bg-shutterstock.webp')`
+				pattern: `url('$lib/assets/bg-shutterstock1920.webp')`
 			}
 		}
 	},

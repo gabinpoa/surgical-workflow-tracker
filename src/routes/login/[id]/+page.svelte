@@ -17,8 +17,8 @@
 			<h1 class="text-2xl font-semibold text-neutral-800">Login</h1>
 			<form method="POST" class="flex-col flex gap-y-3">
 				<select class="select select-sm select-bordered w-40" name="profile">
-					<option value="user">Funcionário</option>
-					<option value="doctor">Doutor</option>
+					<option value="user">Administrativo</option>
+					<option value="doctor">Médico</option>
 				</select>
 				<TextInput
 					placeholder="Digite seu email ou usuário"
