@@ -13,7 +13,7 @@
 </script>
 
 {#if surgery}
-	<div class="flex items-center flex-col min-h-screen bg-pattern bg-contain pt-9 pb-6">
+	<div class="flex items-center flex-col min-h-screen bg-pattern bg-contain bg-fixed pt-9 pb-6">
 		<BackToHome />
 		<main
 			class="flex flex-col items-center flex-1 rounded-xl bg-white p-6 pt-9 w-1/2 gap-y-8 max-w-4xl"

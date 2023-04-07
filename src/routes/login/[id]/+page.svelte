@@ -10,15 +10,15 @@
 	export let form: ActionData;
 </script>
 
-<div class="min-h-screen flex justify-center items-center bg-pattern bg-contain">
+<div class="min-h-screen flex justify-center items-center bg-pattern bg-contain bg-fixed">
 	<main class="bg-white rounded-xl">
 		<div class="p-4 pt-6 overflow-hidden grid gap-4 lg:w-96 lg:gap-6">
 			<h1 class="font-crimsontext text-lg lg:mb-2">ORBITS</h1>
 			<h1 class="text-2xl font-semibold text-neutral-800">Login</h1>
 			<form method="POST" class="flex-col flex gap-y-3">
 				<select class="select select-sm select-bordered w-40" name="profile">
-					<option value="user">Funcionário</option>
-					<option value="doctor">Doutor</option>
+					<option value="user">Administrativo</option>
+					<option value="doctor">Médico</option>
 				</select>
 				<TextInput
 					placeholder="Digite seu email ou usuário"
