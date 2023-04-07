@@ -9,7 +9,7 @@
 	let finishedSurgeries = false;
 </script>
 
-<div class="flex items-center flex-col min-h-screen bg-pattern bg-contain">
+<div class="flex items-center flex-col min-h-screen bg-pattern bg-fixed bg-contain">
 	<div class="h-52 flex flex-col justify-center">
 		<div class="bg-black text-white text-2xl bg-opacity-80 font-semibold p-3 rounded-xl">
 			<h1>Bem-vindo(a),</h1>

@@ -10,7 +10,7 @@
 	export let form: ActionData;
 </script>
 
-<div class="min-h-screen flex justify-center items-center bg-pattern bg-contain">
+<div class="min-h-screen flex justify-center items-center bg-pattern bg-contain bg-fixed">
 	<main class="bg-white rounded-xl">
 		<div class="p-4 pt-6 overflow-hidden grid gap-4 lg:w-96 lg:gap-6">
 			<h1 class="font-crimsontext text-lg lg:mb-2">ORBITS</h1>

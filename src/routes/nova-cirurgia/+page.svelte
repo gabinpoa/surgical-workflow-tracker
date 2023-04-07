@@ -19,7 +19,7 @@
 		time.length === 0;
 </script>
 
-<main class="h-screen bg-pattern flex flex-col justify-center items-center bg-contain">
+<main class="h-screen bg-pattern flex flex-col justify-center items-center bg-contain bg-fixed">
 	<BackToHome />
 	<form method="POST" class="form-control bg-white rounded-xl p-10 gap-y-3">
 		<h1 class="text-xl font-semibold text-neutral-600 mb-1">Criar nova cirurgia solicitada</h1>
