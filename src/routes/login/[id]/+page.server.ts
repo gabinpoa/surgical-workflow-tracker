@@ -12,7 +12,6 @@ export const actions: Actions = {
 		const data = await request.formData();
 		const emailOrUsername = data.get('email');
 		const password = data.get('password');
-		const profile = data.get('profile');
 
 		if (!(emailOrUsername?.length !== 0) || !(password?.length !== 0)) {
 			return fail(400, {
@@ -22,15 +21,9 @@ export const actions: Actions = {
 		}
 
 		try {
-			if (profile === 'doctor') {
-				await locals.pb
-					.collection('doctors')
-					.authWithPassword(emailOrUsername as string, password as string);
-			} else {
-				await locals.pb
-					.collection('users')
-					.authWithPassword(emailOrUsername as string, password as string);
-			}
+			await locals.pb
+				.collection('users')
+				.authWithPassword(emailOrUsername as string, password as string);
 		} catch (_) {
 			console.log(_);
 			return fail(400, {

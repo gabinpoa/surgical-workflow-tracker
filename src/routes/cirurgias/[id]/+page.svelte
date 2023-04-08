@@ -8,7 +8,6 @@
 	export let data: PageServerData;
 
 	let surgery = data.surgery;
-	const user = data.user;
 	const stepHistories = data.stepHistories;
 </script>
 

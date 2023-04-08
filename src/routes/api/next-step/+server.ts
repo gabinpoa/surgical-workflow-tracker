@@ -5,13 +5,11 @@ import type { RequestHandler } from './$types';
 import {
 	SECRET_EMAIL_ADDRESS,
 	SECRET_AWS_ACCESS_KEY,
-	SECRET_AWS_KEY_ID,
-	SECRET_SOURCE_ARN,
-	SECRET_EMAIL_PASSWORD
+	SECRET_AWS_KEY_ID
 } from '$env/static/private';
-import sendKingHostMail from '$lib/mail/sendKingHostMail';
 import getMailMessage from '$lib/mail/getMailMessage';
 import { sendSesMail } from '$lib/mail/sendSesMail';
+import { Filter } from '$lib/utils';
 
 export interface NextStepRequestBody {
 	surgery: {
@@ -20,6 +18,7 @@ export interface NextStepRequestBody {
 	};
 	informedDate: string;
 	responseStatus: string;
+	filter: string;
 }
 
 export const POST: RequestHandler = async ({ request, locals }) => {
@@ -59,7 +58,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			}
 		);
 
-		const surgeries = await locals.pb.collection('surgeries').getFullList<SurgeryRecord>({
+		let surgeries = await locals.pb.collection('surgeries').getFullList<SurgeryRecord>({
 			expand: 'surgeon'
 		});
 
@@ -72,6 +71,13 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			getMailMessage(updatedSurgery, locals.pb.authStore.model?.name as string),
 			updatedSurgery.expand.surgeon.email
 		);
+
+		surgeries =
+			data.filter === Filter.OnGoing
+				? surgeries.filter((el) => el.currentStep !== CurrentStep.Concluido)
+				: data.filter === Filter.Finished
+				? surgeries.filter((el) => el.currentStep === CurrentStep.Concluido)
+				: surgeries;
 
 		return new Response(JSON.stringify(surgeries));
 	} catch (err) {

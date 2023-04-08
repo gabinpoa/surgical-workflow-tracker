@@ -1,4 +1,4 @@
-import { serializeNonPOJOs, type SurgeryRecord } from '$lib/pb';
+import { Profile, serializeNonPOJOs, type SurgeryRecord } from '$lib/pb';
 import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
@@ -14,7 +14,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 			surgeries: serializeNonPOJOs(surgeries.reverse()) as SurgeryRecord[],
 			user: {
 				name: locals.pb.authStore.model?.name as string,
-				profile: locals.pb.authStore.model.collectionName
+				profile: locals.pb.authStore.model?.profile as Profile
 			}
 		};
 	} catch (err) {

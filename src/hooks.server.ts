@@ -8,13 +8,8 @@ export async function handle({ event, resolve }) {
 	event.locals.pb.authStore.loadFromCookie(event.request.headers.get('cookie') || '');
 
 	try {
-		if (
-			event.locals.pb.authStore.isValid &&
-			event.locals.pb.authStore.model?.collectionName === 'users'
-		) {
+		if (event.locals.pb.authStore.isValid) {
 			await event.locals.pb.collection('users').authRefresh();
-		} else if (event.locals.pb.authStore.isValid) {
-			await event.locals.pb.collection('doctors').authRefresh();
 		}
 	} catch (err) {
 		event.locals.pb.authStore.clear();

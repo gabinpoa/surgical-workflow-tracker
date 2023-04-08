@@ -1,4 +1,4 @@
-import { serializeNonPOJOs, type SurgeryWithHistoryRecord } from '$lib/pb';
+import { Profile, serializeNonPOJOs, type SurgeryWithHistoryRecord } from '$lib/pb';
 import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
@@ -14,11 +14,7 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 
 		return {
 			surgery: serializeNonPOJOs(surgery) as SurgeryWithHistoryRecord,
-			stepHistories: serializeNonPOJOs(surgery.expand['stepHistory(surgery)'].reverse()),
-			user: {
-				name: locals.pb.authStore.model?.name as string,
-				profile: locals.pb.authStore.model.collectionName
-			}
+			stepHistories: serializeNonPOJOs(surgery.expand['stepHistory(surgery)'].reverse())
 		};
 	} catch (err) {
 		throw error(404, 'Cirurgia não encontrada');
