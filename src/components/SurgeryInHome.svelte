@@ -5,10 +5,11 @@
 	import type { NextStepRequestBody } from '../routes/api/next-step/+server';
 	import { dev } from '$app/environment';
 	import FaSpinner from 'svelte-icons/fa/FaSpinner.svelte';
+	import type { Filter } from '$lib/utils';
 
 	export let surgery: SurgeryRecord;
-	export let profile: string;
 	export let updateSurgeries: (response: SurgeryRecord[]) => void;
+	export let filter: Filter;
 
 	const initialDate = new Date();
 	initialDate.setMinutes(0, 0, 0);
@@ -24,7 +25,8 @@
 				id: surgery.id
 			},
 			informedDate,
-			responseStatus
+			responseStatus,
+			filter
 		};
 
 		const response: SurgeryRecord[] = await (
@@ -100,16 +102,14 @@
 			/>
 		</div>
 		<div class="card-actions mt-2 items-center gap-x-4">
-			{#if profile === 'users' && surgery.currentStep !== CurrentStep.Concluido}
-				<button
-					on:click={handleNextStep}
-					disabled={surgery.currentStep === CurrentStep.RespostaConvenio ||
-					surgery.currentStep === CurrentStep.RespostaJustificativas
-						? responseStatus.length === 0
-						: false}
-					class="btn btn-success btn-sm">Atendido</button
-				>
-			{/if}
+			<button
+				on:click={handleNextStep}
+				disabled={surgery.currentStep === CurrentStep.RespostaConvenio ||
+				surgery.currentStep === CurrentStep.RespostaJustificativas
+					? responseStatus.length === 0
+					: false}
+				class="btn btn-success btn-sm">Atendido</button
+			>
 			<a
 				class="btn btn-primary btn-sm"
 				href={`${dev ? 'http://localhost:5173' : 'https://orbits.hospital'}/cirurgias/${

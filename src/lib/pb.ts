@@ -43,7 +43,15 @@ export class SurgeryRecord extends Record {
 
 export class UserRecord extends Record {
 	name!: string;
-	visibleSteps!: string[];
+	profile!: Profile;
+	email!: string;
+	username!: string;
+	emailVisibility!: boolean;
+}
+
+export enum Profile {
+	Medico = 'Médico',
+	Administrativo = 'Administrativo'
 }
 
 export class StepHistoryRecord extends Record {
