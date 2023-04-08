@@ -1,8 +1,10 @@
 <script lang="ts">
+	import FaSpinner from 'svelte-icons/fa/FaSpinner.svelte';
 	import { surgeryNames } from '$lib/selectChoices';
 	import Label from '../../components/Label.svelte';
 	import type { PageData } from './$types';
 	import BackToHome from '../../components/BackToHome.svelte';
+	import { goto } from '$app/navigation';
 
 	export let data: PageData;
 	let patient = '';
@@ -10,6 +12,7 @@
 	let surgeon = '';
 	let date = '';
 	let time = '';
+	let loading = false;
 
 	$: buttonDisabled =
 		patient.length < 3 ||
@@ -17,12 +20,39 @@
 		surgeon.length === 0 ||
 		date.length === 0 ||
 		time.length === 0;
+
+	async function handleSubmit() {
+		loading = true;
+
+		const response = await (
+			await fetch('/nova-cirurgia', {
+				method: 'POST',
+				headers: {
+					'content-type': 'application/json'
+				},
+				body: JSON.stringify({ patient, surgeryName, surgeon, date, time })
+			})
+		).json();
+
+		if (response.success === true) {
+			goto('/');
+		}
+	}
 </script>
 
+{#if loading}
+	<div
+		class="absolute flex items-center justify-center top-0 bottom-0 right-0 left-0 bg-white bg-opacity-60"
+	>
+		<div class="animate-spin w-20">
+			<FaSpinner />
+		</div>
+	</div>
+{/if}
 <main class="h-screen bg-pattern flex flex-col justify-center items-center bg-contain bg-fixed">
 	<BackToHome />
-	<form method="POST" class="form-control bg-white rounded-xl p-10 gap-y-3">
-		<h1 class="text-xl font-semibold text-neutral-600 mb-1">Criar nova cirurgia solicitada</h1>
+	<form on:submit={handleSubmit} class="form-control bg-white rounded-xl p-10 gap-y-3">
+		<h1 class="text-xl font-semibold text-neutral-600 mb-1">Criar novo procedimento</h1>
 		<div>
 			<Label name="patient" title="Paciente" />
 			<input
@@ -74,6 +104,8 @@
 				type="time"
 			/>
 		</div>
-		<button disabled={buttonDisabled} class="btn mt-3 btn-success" type="submit">Criar</button>
+		<button disabled={buttonDisabled || loading} class="btn mt-3 btn-success" type="submit"
+			>Criar</button
+		>
 	</form>
 </main>
