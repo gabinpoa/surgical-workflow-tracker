@@ -6,7 +6,7 @@
 	export let data: PageServerData;
 
 	let surgeries = data.surgeries.filter((el) => el.currentStep !== CurrentStep.Concluido);
-	let finishedSurgeries = false;
+	let filter = 'ongoing';
 </script>
 
 <div class="flex items-center flex-col min-h-screen bg-pattern bg-fixed bg-contain">
@@ -19,24 +19,32 @@
 	<main
 		class="flex flex-col items-center flex-1 rounded-t-xl bg-white p-6 pt-12 w-1/2 gap-y-8 max-w-4xl"
 	>
-		<a href="/nova-cirurgia" class="btn capitalize">Criar nova operação</a>
+		<a href="/nova-cirurgia" class="btn capitalize">Criar novo procedimento</a>
 		<div class="btn-group">
 			<button
 				on:click={() => {
-					finishedSurgeries = false;
+					filter = 'ongoing';
 					surgeries = data.surgeries.filter((el) => el.currentStep !== CurrentStep.Concluido);
 				}}
-				style="background-color: {finishedSurgeries === false
+				style="background-color: {filter === 'ongoing'
 					? 'rgb(29, 78, 216)'
 					: 'rgb(115, 115, 115)'};"
 				class="btn btn-sm border-0 capitalize w-[17ch]">Em andamento</button
 			>
 			<button
 				on:click={() => {
-					finishedSurgeries = true;
+					filter = 'all';
+					surgeries = data.surgeries;
+				}}
+				style="background-color: {filter === 'all' ? 'rgb(29, 78, 216)' : 'rgb(145, 145, 145)'};"
+				class="btn btn-sm border-0 capitalize w-[17ch]">Todas</button
+			>
+			<button
+				on:click={() => {
+					filter = 'finished';
 					surgeries = data.surgeries.filter((el) => el.currentStep === CurrentStep.Concluido);
 				}}
-				style="background-color: {finishedSurgeries === true
+				style="background-color: {filter === 'finished'
 					? 'rgb(29, 78, 216)'
 					: 'rgb(145, 145, 145)'};"
 				class="btn btn-sm border-0 capitalize w-[17ch]">Concluídas</button

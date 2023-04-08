@@ -4,6 +4,7 @@
 	import { pbStringDateToDate } from '../lib/utils/pb.utils';
 	import type { NextStepRequestBody } from '../routes/api/next-step/+server';
 	import { dev } from '$app/environment';
+	import FaSpinner from 'svelte-icons/fa/FaSpinner.svelte';
 
 	export let surgery: SurgeryRecord;
 	export let profile: string;
@@ -13,8 +14,10 @@
 	initialDate.setMinutes(0, 0, 0);
 	let informedDate = initialDate.toISOString().slice(0, -1);
 	let responseStatus = '';
+	let loading = false;
 
 	async function handleNextStep() {
+		loading = true;
 		const data: NextStepRequestBody = {
 			surgery: {
 				currentStep: surgery.currentStep,
@@ -24,9 +27,7 @@
 			responseStatus
 		};
 
-		const response: {
-			surgeries: SurgeryRecord[];
-		} = await (
+		const response: SurgeryRecord[] = await (
 			await fetch('/api/next-step', {
 				method: 'POST',
 				headers: {
@@ -36,9 +37,20 @@
 			})
 		).json();
 
-		updateSurgeries(response.surgeries);
+		updateSurgeries(response);
+		loading = false;
 	}
 </script>
+
+{#if loading}
+	<div
+		class="absolute flex items-center justify-center top-0 bottom-0 right-0 left-0 bg-white bg-opacity-60"
+	>
+		<div class="animate-spin w-20">
+			<FaSpinner />
+		</div>
+	</div>
+{/if}
 
 <div class="card card-bordered shadow">
 	<div class="card-body">
