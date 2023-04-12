@@ -17,7 +17,7 @@ export interface NextStepRequestBody {
 		id: string;
 	};
 	informedDate: string;
-	responseStatus: string;
+	responseStatus: string | boolean;
 	filter: string;
 }
 
@@ -29,24 +29,50 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			surgery: string;
 			informedDate: string;
 			step: CurrentStep;
-			responseStatus?: string;
+			responseStatus?: string | boolean;
 		} = {
 			user: locals.pb.authStore.model?.id as string,
 			surgery: data.surgery.id,
 			informedDate: data.informedDate,
 			step: data.surgery.currentStep
 		};
-		if (data.responseStatus.length > 0) {
+		if (
+			(typeof data.responseStatus === 'string' && data.responseStatus.length > 0) ||
+			typeof data.responseStatus === 'boolean'
+		) {
 			stepHistoryBody.responseStatus = data.responseStatus;
 		}
 		await locals.pb.collection('stepHistory').create(stepHistoryBody);
 
-		const currentStep =
-			data.responseStatus === ResponseStatus.Autorizada
-				? CurrentStep.Concluido
-				: data.responseStatus === ResponseStatus.NovasJustificativas
-				? CurrentStep.EnvioJustificativas
-				: steps[steps.findIndex((el) => el === data.surgery.currentStep) + 1];
+		let currentStep = steps[steps.findIndex((el) => el === data.surgery.currentStep) + 1];
+
+		if (
+			data.surgery.currentStep === CurrentStep.DocsEnviadosHJS &&
+			stepHistoryBody.responseStatus === false
+		) {
+			currentStep = CurrentStep.DocsEnviadosConvenio;
+		} else if (data.surgery.currentStep === CurrentStep.RespostaConvenio) {
+			if (
+				data.responseStatus === ResponseStatus.AutorizadoIntegral ||
+				data.responseStatus === ResponseStatus.AutorizadoParcial
+			) {
+				currentStep = CurrentStep.Concluido;
+			} else if (data.responseStatus === ResponseStatus.Negada) {
+				currentStep = CurrentStep.Suspensa;
+			}
+		} else if (data.surgery.currentStep === CurrentStep.RetornoOPME) {
+			if (data.responseStatus === ResponseStatus.EncaminhadoConvenio) {
+				currentStep = CurrentStep.DocsEnviadosConvenio;
+			}
+		} else if (data.surgery.currentStep === CurrentStep.EnvioJustificativasOPME) {
+			currentStep = CurrentStep.RetornoOPME;
+		} else if (data.surgery.currentStep === CurrentStep.RespostaJustificativas) {
+			if (data.responseStatus === ResponseStatus.NovasJustificativas) {
+				currentStep = CurrentStep.EnvioJustificativas;
+			} else if (data.responseStatus === ResponseStatus.Negada) {
+				currentStep = CurrentStep.Suspensa;
+			}
+		}
 
 		const updatedSurgery = await locals.pb.collection('surgeries').update<SurgeryRecord>(
 			data.surgery.id,
@@ -59,7 +85,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		);
 
 		let surgeries = await locals.pb.collection('surgeries').getFullList<SurgeryRecord>({
-			expand: 'surgeon'
+			expand: 'surgeon',
+			sort: '-created'
 		});
 
 		await sendSesMail(
@@ -71,13 +98,6 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			getMailMessage(updatedSurgery, locals.pb.authStore.model?.name as string),
 			updatedSurgery.expand.surgeon.email
 		);
-
-		surgeries =
-			data.filter === Filter.OnGoing
-				? surgeries.filter((el) => el.currentStep !== CurrentStep.Concluido)
-				: data.filter === Filter.Finished
-				? surgeries.filter((el) => el.currentStep === CurrentStep.Concluido)
-				: surgeries;
 
 		return new Response(JSON.stringify(surgeries));
 	} catch (err) {

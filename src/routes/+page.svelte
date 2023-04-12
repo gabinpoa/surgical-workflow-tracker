@@ -6,10 +6,10 @@
 	import { Filter } from '$lib/utils';
 	import SurgeryInHome from '../components/SurgeryInHome.svelte';
 	import type { PageServerData } from './$types';
+
 	export let data: PageServerData;
 	import IoIosLogOut from 'svelte-icons/io/IoIosLogOut.svelte';
-
-	let surgeries = data.surgeries.filter((el) => el.currentStep !== CurrentStep.Concluido);
+	let dataSurgeries = data.surgeries;
 	let filter: Filter = Filter.OnGoing;
 </script>
 
@@ -31,9 +31,8 @@
 			<button
 				on:click={() => {
 					filter = Filter.OnGoing;
-					surgeries = data.surgeries.filter((el) => el.currentStep !== CurrentStep.Concluido);
 				}}
-				style="background-color: {filter === 'ongoing'
+				style="background-color: {filter === Filter.OnGoing
 					? 'rgb(29, 78, 216)'
 					: 'rgb(145, 145, 145)'};"
 				class="btn btn-sm border-0 capitalize w-[17ch]">Em andamento</button
@@ -41,28 +40,36 @@
 			<button
 				on:click={() => {
 					filter = Filter.All;
-					surgeries = data.surgeries;
 				}}
-				style="background-color: {filter === 'all' ? 'rgb(29, 78, 216)' : 'rgb(145, 145, 145)'};"
+				style="background-color: {filter === Filter.All
+					? 'rgb(29, 78, 216)'
+					: 'rgb(145, 145, 145)'};"
 				class="btn btn-sm border-0 capitalize w-[17ch]">Todas</button
 			>
 			<button
 				on:click={() => {
 					filter = Filter.Finished;
-					surgeries = data.surgeries.filter((el) => el.currentStep === CurrentStep.Concluido);
 				}}
-				style="background-color: {filter === 'finished'
+				style="background-color: {filter === Filter.Finished
 					? 'rgb(29, 78, 216)'
 					: 'rgb(145, 145, 145)'};"
 				class="btn btn-sm border-0 capitalize w-[17ch]">Concluídas</button
 			>
 		</div>
 		<div class="w-full space-y-3">
-			{#each surgeries as surgeryItem}
+			{#each dataSurgeries.filter((e) => {
+				if (filter === Filter.OnGoing) {
+					return e.currentStep !== CurrentStep.Concluido && e.currentStep !== CurrentStep.Suspensa;
+				} else if (filter === Filter.Finished) {
+					return e.currentStep === CurrentStep.Concluido || e.currentStep === CurrentStep.Suspensa;
+				} else {
+					return true;
+				}
+			}) as surgeryItem}
 				<SurgeryInHome
 					{filter}
 					updateSurgeries={(response) => {
-						surgeries = response;
+						dataSurgeries = response;
 					}}
 					surgery={surgeryItem}
 				/>
