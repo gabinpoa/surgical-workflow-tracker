@@ -65,7 +65,7 @@
 		'border-red-300'}"
 >
 	<div class="card-body">
-		<p class="card-title">{surgery.surgeryName}</p>
+		<p class="card-title capitalize">{surgery.surgeryName}</p>
 		<p class="font-light">
 			Etapa em andamento: <span class="font-normal">{surgery.currentStep}</span>
 		</p>
