@@ -21,7 +21,7 @@
 				<div class="card card-bordered shadow mb-10">
 					<div class="card-body">
 						<div class="flex items-center gap-x-6">
-							<h3 class="card-title">{surgery.surgeryName}</h3>
+							<h3 class="card-title capitalize">{surgery.surgeryName}</h3>
 							<div class="tooltip tooltip-bottom" data-tip="Progresso">
 								<progress
 									class="progress w-52 progress-info"
