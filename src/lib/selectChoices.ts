@@ -69,13 +69,15 @@ export const surgeonNames = [
 ];
 export enum CurrentStep {
 	Criacao = 'Criação',
-	DocsEnviadosHJS = 'Enviar documentos para a secretária do HSJ',
+	DocsEnviadosHJS = 'Enviados documentos para secretária',
 	SolicitadoOPME = 'Solicitar orçamento OPME',
-	RetornoOPME = 'Retorno do orçamento do OPME',
+	RetornoOPME = 'Resposta da cotação OPME',
+	EnvioJustificativasOPME = 'Envio de justificativas OPME',
 	DocsEnviadosConvenio = 'Encaminhar documentos para convênio',
 	RespostaConvenio = 'Resposta do convênio',
 	EnvioJustificativas = 'Envio de Justificativas/documentos',
 	RespostaJustificativas = 'Resposta após justificativa',
+	Suspensa = 'Suspenso',
 	Concluido = 'Concluído'
 }
 export const steps = [
@@ -83,6 +85,7 @@ export const steps = [
 	CurrentStep.DocsEnviadosHJS,
 	CurrentStep.SolicitadoOPME,
 	CurrentStep.RetornoOPME,
+	CurrentStep.EnvioJustificativasOPME,
 	CurrentStep.DocsEnviadosConvenio,
 	CurrentStep.RespostaConvenio,
 	CurrentStep.EnvioJustificativas,
@@ -90,7 +93,12 @@ export const steps = [
 	CurrentStep.Concluido
 ];
 export enum ResponseStatus {
-	Autorizada = 'Autorizada',
-	Pendente = 'Pendente de justificativas / documentos',
-	NovasJustificativas = 'Necessita novas justificativas'
+	Autorizada = 'Autorizado',
+	NovasJustificativas = 'Necessita novas justificativas',
+	Negada = 'Negado',
+	AutorizadoIntegral = 'Autorizado integralmente',
+	AutorizadoParcial = 'Autorizado parcialmente',
+	NecessitaJustificativas = 'Necessita justificativa',
+	EncaminhadoConvenio = 'Encaminhado para autorização do convênio',
+	NecessitaJustificativasMaterial = 'Necessita justificativa do material'
 }

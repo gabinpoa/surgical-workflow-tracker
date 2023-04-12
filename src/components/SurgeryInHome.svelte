@@ -16,6 +16,8 @@
 	let informedDate = initialDate.toISOString().slice(0, -1);
 	let responseStatus = '';
 	let loading = false;
+	let specialMaterialsYes = false;
+	let specialMaterialsNo = false;
 
 	async function handleNextStep() {
 		loading = true;
@@ -28,6 +30,10 @@
 			responseStatus,
 			filter
 		};
+
+		if (surgery.currentStep === CurrentStep.DocsEnviadosHJS) {
+			data.responseStatus = specialMaterialsYes;
+		}
 
 		const response: SurgeryRecord[] = await (
 			await fetch('/api/next-step', {
@@ -46,7 +52,7 @@
 
 {#if loading}
 	<div
-		class="absolute flex items-center justify-center top-0 bottom-0 right-0 left-0 bg-white bg-opacity-60"
+		class="fixed z-10 flex items-center h-full w-full justify-center bottom-0 right-0 left-0 bg-white bg-opacity-60"
 	>
 		<div class="animate-spin w-20">
 			<FaSpinner />
@@ -54,7 +60,10 @@
 	</div>
 {/if}
 
-<div class="card card-bordered shadow">
+<div
+	class="card card-bordered shadow {surgery.currentStep === CurrentStep.Suspensa &&
+		'border-red-300'}"
+>
 	<div class="card-body">
 		<p class="card-title">{surgery.surgeryName}</p>
 		<p class="font-light">
@@ -71,23 +80,72 @@
 				})}</span
 			>
 		</p>
+		{#if surgery.currentStep === CurrentStep.DocsEnviadosHJS}
+			<div>
+				<p>Necessita materiais especiais:</p>
+				<label for="sim">Sim</label>
+				<input
+					on:click={() => {
+						specialMaterialsYes = !specialMaterialsYes;
+						specialMaterialsNo = false;
+					}}
+					checked={specialMaterialsYes}
+					type="checkbox"
+					name="sim"
+				/>
+				<label class="ml-2" for="nao">Não</label>
+				<input
+					on:click={() => {
+						specialMaterialsNo = !specialMaterialsNo;
+						specialMaterialsYes = false;
+					}}
+					checked={specialMaterialsNo}
+					type="checkbox"
+					name="nao"
+				/>
+			</div>
+		{/if}
 		{#if surgery.currentStep === CurrentStep.RespostaConvenio || surgery.currentStep === CurrentStep.RespostaJustificativas}
 			<div>
-				<label for="responseStatus">Resposta do convênio</label>
+				<label for="responseStatus">Resposta do convênio: </label>
 				<select
 					class="select select-bordered select-sm"
 					bind:value={responseStatus}
 					name="responseStatus"
 				>
-					<option value="">Selecione uma resposta do convênio</option>
-					<option value={ResponseStatus.Autorizada}>{ResponseStatus.Autorizada}</option>
+					<option selected value="">Selecione uma resposta do convênio</option>
+					<option value={ResponseStatus.AutorizadoIntegral}
+						>{ResponseStatus.AutorizadoIntegral}</option
+					>
+					<option value={ResponseStatus.AutorizadoParcial}
+						>{ResponseStatus.AutorizadoParcial}</option
+					>
 					<option
 						value={surgery.currentStep === CurrentStep.RespostaConvenio
-							? ResponseStatus.Pendente
+							? ResponseStatus.NecessitaJustificativas
 							: ResponseStatus.NovasJustificativas}
 						>{surgery.currentStep === CurrentStep.RespostaConvenio
-							? ResponseStatus.Pendente
+							? ResponseStatus.NecessitaJustificativas
 							: ResponseStatus.NovasJustificativas}</option
+					>
+					<option value={ResponseStatus.Negada}>{ResponseStatus.Negada}</option>
+				</select>
+			</div>
+		{/if}
+		{#if surgery.currentStep === CurrentStep.RetornoOPME}
+			<div>
+				<label for="responseStatus">Resposta do OPME: </label>
+				<select
+					class="select select-bordered select-sm"
+					name="responseStatus"
+					bind:value={responseStatus}
+				>
+					<option value="">Selecione uma resposta do OPME</option>
+					<option value={ResponseStatus.EncaminhadoConvenio}
+						>{ResponseStatus.EncaminhadoConvenio}</option
+					>
+					<option value={ResponseStatus.NecessitaJustificativasMaterial}
+						>{ResponseStatus.NecessitaJustificativasMaterial}</option
 					>
 				</select>
 			</div>
@@ -102,14 +160,19 @@
 			/>
 		</div>
 		<div class="card-actions mt-2 items-center gap-x-4">
-			<button
-				on:click={handleNextStep}
-				disabled={surgery.currentStep === CurrentStep.RespostaConvenio ||
-				surgery.currentStep === CurrentStep.RespostaJustificativas
-					? responseStatus.length === 0
-					: false}
-				class="btn btn-success btn-sm">Atendido</button
-			>
+			{#if surgery.currentStep !== CurrentStep.Concluido && surgery.currentStep !== CurrentStep.Suspensa}
+				<button
+					on:click={handleNextStep}
+					disabled={(surgery.currentStep === CurrentStep.DocsEnviadosHJS &&
+						!specialMaterialsNo &&
+						!specialMaterialsYes) ||
+						((surgery.currentStep === CurrentStep.RespostaConvenio ||
+							surgery.currentStep === CurrentStep.RespostaJustificativas ||
+							surgery.currentStep === CurrentStep.RetornoOPME) &&
+							responseStatus.length === 0)}
+					class="btn btn-success btn-sm">Atendido</button
+				>
+			{/if}
 			<a
 				class="btn btn-primary btn-sm"
 				href={`${dev ? 'http://localhost:5173' : 'https://orbits.hospital'}/cirurgias/${
