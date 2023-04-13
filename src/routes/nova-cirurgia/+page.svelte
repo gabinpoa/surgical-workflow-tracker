@@ -57,7 +57,6 @@
 	<BackToHome />
 	<form on:submit={handleSubmit} class="form-control bg-white rounded-xl p-10 gap-y-3">
 		<h1 class="text-xl font-semibold text-neutral-600 mb-1">Criar novo procedimento</h1>
-		<p>{yesBox}</p>
 		<div>
 			<Label name="patient" title="Paciente" />
 			<input
