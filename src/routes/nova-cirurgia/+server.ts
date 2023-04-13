@@ -15,8 +15,7 @@ export interface NextSurgeryRequestBody {
 	patient: string;
 	surgeryName: string;
 	surgeon: string;
-	date: string;
-	time: string;
+	specialMaterials: boolean;
 }
 
 export const POST: RequestHandler = async ({ locals, request }) => {
@@ -25,8 +24,6 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 	if (Object.values(data).some((el) => el.length === 0)) {
 		throw error(400, 'Campos não preenchidos');
 	}
-
-	const estimatedDate = pbDateString(new Date(`${data.date} ${data.time}`));
 
 	const surgeonObj: { name: string; id: string; email: string } = JSON.parse(
 		data.surgeon as string
@@ -38,8 +35,10 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 				patient: data.patient,
 				surgeryName: data.surgeryName,
 				surgeon: surgeonObj.id,
-				estimatedDate,
-				currentStep: CurrentStep.DocsEnviadosHJS
+				currentStep: data.specialMaterials
+					? CurrentStep.SolicitadoOPME
+					: CurrentStep.DocsEnviadosConvenio,
+				specialMaterials: data.specialMaterials
 			},
 			{
 				expand: 'surgeon'

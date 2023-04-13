@@ -26,7 +26,9 @@
 		{/if}
 		{#if step.responseStatus}
 			<p class="font-light">
-				{step.step === CurrentStep.RespostaJustificativas
+				{step.step === CurrentStep.RetornoOPME
+					? 'Resposta do OPME: '
+					: step.step === CurrentStep.RespostaJustificativas
 					? 'Resposta após justificativa: '
 					: 'Resposta do convênio: '}<span class="font-normal">{step.responseStatus}</span>
 			</p>

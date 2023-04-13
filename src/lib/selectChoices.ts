@@ -69,7 +69,6 @@ export const surgeonNames = [
 ];
 export enum CurrentStep {
 	Criacao = 'Criação',
-	DocsEnviadosHJS = 'Enviados documentos para secretária',
 	SolicitadoOPME = 'Solicitar orçamento OPME',
 	RetornoOPME = 'Resposta da cotação OPME',
 	EnvioJustificativasOPME = 'Envio de justificativas OPME',
@@ -82,7 +81,6 @@ export enum CurrentStep {
 }
 export const steps = [
 	CurrentStep.Criacao,
-	CurrentStep.DocsEnviadosHJS,
 	CurrentStep.SolicitadoOPME,
 	CurrentStep.RetornoOPME,
 	CurrentStep.EnvioJustificativasOPME,

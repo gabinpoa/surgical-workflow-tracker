@@ -17,16 +17,23 @@
 	<IoIosLogOut />
 </a>
 <div class="flex items-center flex-col min-h-screen bg-pattern bg-fixed bg-contain">
-	<div class="h-52 flex flex-col justify-center">
+	<div class="h-44 flex items-center relative">
 		<div class="bg-black text-white text-2xl bg-opacity-80 font-semibold p-3 rounded-xl">
 			<h1>Bem-vindo(a),</h1>
 			<h1>{data.user.profile === Profile.Medico ? 'Dr. ' + data.user.name : data.user.name}</h1>
 		</div>
 	</div>
 	<main
-		class="flex flex-col items-center flex-1 rounded-t-xl bg-white p-6 pt-12 w-1/2 gap-y-8 max-w-4xl"
+		class="flex flex-col items-center flex-1 rounded-t-xl bg-white p-6 pt-10 w-1/2 gap-y-8 max-w-4xl"
 	>
-		<a href="/nova-cirurgia" class="btn capitalize">Criar novo procedimento</a>
+		<div class="flex justify-center gap-x-4 items-center">
+			<a href="/nova-cirurgia" class="btn capitalize">Criara novo procedimento</a>
+			<a
+				target="_blank"
+				class="btn btn-outline btn-primary bg-transparent capitalize"
+				href="https://agendamentohsj.secure.simplybook.me/v2/">Agendar cirurgia</a
+			>
+		</div>
 		<div class="btn-group">
 			<button
 				on:click={() => {
@@ -67,6 +74,7 @@
 				}
 			}) as surgeryItem}
 				<SurgeryInHome
+					profile={data.user.profile}
 					{filter}
 					updateSurgeries={(response) => {
 						dataSurgeries = response;

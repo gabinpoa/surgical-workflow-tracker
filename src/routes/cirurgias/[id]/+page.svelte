@@ -39,11 +39,6 @@
 							Cirurgião: <span class="font-normal">{surgery.expand.surgeon.name}</span>
 						</p>
 						<p class="font-light">Paciente: <span class="font-normal">{surgery.patient}</span></p>
-						<p class="font-light">
-							Data estimada: <span class="font-normal"
-								>{pbStringDateToDate(surgery.estimatedDate).toLocaleString()}</span
-							>
-						</p>
 					</div>
 				</div>
 				{#if stepHistories}
