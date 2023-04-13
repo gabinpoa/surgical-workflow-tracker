@@ -27,7 +27,7 @@
 		class="flex flex-col items-center flex-1 rounded-t-xl bg-white p-6 pt-10 w-1/2 gap-y-8 max-w-4xl"
 	>
 		<div class="flex justify-center gap-x-4 items-center">
-			<a href="/nova-cirurgia" class="btn capitalize">Criara novo procedimento</a>
+			<a href="/nova-cirurgia" class="btn capitalize">Criar novo procedimento</a>
 			<a
 				target="_blank"
 				class="btn btn-outline btn-primary bg-transparent capitalize"
