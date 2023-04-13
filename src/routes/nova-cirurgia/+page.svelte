@@ -5,24 +5,28 @@
 	import type { PageData } from './$types';
 	import BackToHome from '../../components/BackToHome.svelte';
 	import { goto } from '$app/navigation';
+	import type { NextSurgeryRequestBody } from './+server';
 
 	export let data: PageData;
 	let patient = '';
 	let surgeryName = '';
 	let surgeon = '';
-	let date = '';
-	let time = '';
 	let loading = false;
+	let yesBox = false;
+	let noBox = false;
 
 	$: buttonDisabled =
-		patient.length < 3 ||
-		surgeryName.length === 0 ||
-		surgeon.length === 0 ||
-		date.length === 0 ||
-		time.length === 0;
+		patient.length < 3 || surgeryName.length === 0 || surgeon.length === 0 || (!yesBox && !noBox);
 
 	async function handleSubmit() {
 		loading = true;
+
+		const body: NextSurgeryRequestBody = {
+			patient,
+			surgeryName,
+			surgeon,
+			specialMaterials: yesBox
+		};
 
 		const response = await (
 			await fetch('/nova-cirurgia', {
@@ -30,7 +34,7 @@
 				headers: {
 					'content-type': 'application/json'
 				},
-				body: JSON.stringify({ patient, surgeryName, surgeon, date, time })
+				body: JSON.stringify(body)
 			})
 		).json();
 
@@ -53,6 +57,7 @@
 	<BackToHome />
 	<form on:submit={handleSubmit} class="form-control bg-white rounded-xl p-10 gap-y-3">
 		<h1 class="text-xl font-semibold text-neutral-600 mb-1">Criar novo procedimento</h1>
+		<p>{yesBox}</p>
 		<div>
 			<Label name="patient" title="Paciente" />
 			<input
@@ -87,22 +92,35 @@
 			</select>
 		</div>
 		<div>
-			<Label name="date" title="Data" />
-			<input
-				class="input w-full input-bordered font-semibold text-sm"
-				bind:value={date}
-				type="date"
-				name="date"
-			/>
-		</div>
-		<div>
-			<Label name="time" title="Horário" />
-			<input
-				class="input w-full input-bordered font-semibold text-sm"
-				bind:value={time}
-				name="time"
-				type="time"
-			/>
+			<Label name="" title="Necessita materiais especiais" />
+			<div class="flex mt-1">
+				<div class="flex gap-1">
+					<label class="label-text" for="sim">Sim</label>
+					<input
+						class="checkbox checkbox-primary checkbox-sm"
+						on:click={() => {
+							noBox = false;
+							yesBox = !yesBox;
+						}}
+						checked={yesBox}
+						type="checkbox"
+						name="sim"
+					/>
+				</div>
+				<div class="flex gap-1">
+					<label class="label-text ml-2" for="nao">Não</label>
+					<input
+						class="checkbox checkbox-primary checkbox-sm"
+						on:click={() => {
+							yesBox = false;
+							noBox = !noBox;
+						}}
+						checked={noBox}
+						type="checkbox"
+						name="nao"
+					/>
+				</div>
+			</div>
 		</div>
 		<button disabled={buttonDisabled || loading} class="btn mt-3 btn-success" type="submit"
 			>Criar</button

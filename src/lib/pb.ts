@@ -35,7 +35,7 @@ export class SurgeryRecord extends Record {
 	surgeryName!: string;
 	surgeon!: string;
 	currentStep!: CurrentStep;
-	estimatedDate!: string;
+	specialMaterials!: boolean;
 	declare expand: {
 		surgeon: DoctorRecord;
 	};

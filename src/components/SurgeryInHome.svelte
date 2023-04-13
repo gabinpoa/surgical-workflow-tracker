@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { SurgeryRecord } from '$lib/pb';
+	import { Profile, type SurgeryRecord } from '$lib/pb';
 	import { CurrentStep, ResponseStatus } from '$lib/selectChoices';
 	import { pbStringDateToDate } from '../lib/utils/pb.utils';
 	import type { NextStepRequestBody } from '../routes/api/next-step/+server';
@@ -8,6 +8,7 @@
 	import type { Filter } from '$lib/utils';
 
 	export let surgery: SurgeryRecord;
+	export let profile: Profile;
 	export let updateSurgeries: (response: SurgeryRecord[]) => void;
 	export let filter: Filter;
 
@@ -16,8 +17,6 @@
 	let informedDate = initialDate.toISOString().slice(0, -1);
 	let responseStatus = '';
 	let loading = false;
-	let specialMaterialsYes = false;
-	let specialMaterialsNo = false;
 
 	async function handleNextStep() {
 		loading = true;
@@ -30,10 +29,6 @@
 			responseStatus,
 			filter
 		};
-
-		if (surgery.currentStep === CurrentStep.DocsEnviadosHJS) {
-			data.responseStatus = specialMaterialsYes;
-		}
 
 		const response: SurgeryRecord[] = await (
 			await fetch('/api/next-step', {
@@ -73,45 +68,13 @@
 			Cirurgião: <span class="font-normal">Dr. {surgery.expand.surgeon.name}</span>
 		</p>
 		<p class="font-light">Paciente: <span class="font-normal">{surgery.patient}</span></p>
-		<p class="font-light">
-			Data estimada: <span class="font-normal"
-				>{pbStringDateToDate(surgery.estimatedDate).toLocaleString('pt-BR', {
-					hour12: false
-				})}</span
-			>
-		</p>
-		{#if surgery.currentStep === CurrentStep.DocsEnviadosHJS}
-			<div>
-				<p>Necessita materiais especiais:</p>
-				<label for="sim">Sim</label>
-				<input
-					on:click={() => {
-						specialMaterialsYes = !specialMaterialsYes;
-						specialMaterialsNo = false;
-					}}
-					checked={specialMaterialsYes}
-					type="checkbox"
-					name="sim"
-				/>
-				<label class="ml-2" for="nao">Não</label>
-				<input
-					on:click={() => {
-						specialMaterialsNo = !specialMaterialsNo;
-						specialMaterialsYes = false;
-					}}
-					checked={specialMaterialsNo}
-					type="checkbox"
-					name="nao"
-				/>
-			</div>
-		{/if}
 		{#if surgery.currentStep === CurrentStep.RespostaConvenio || surgery.currentStep === CurrentStep.RespostaJustificativas}
 			<div>
 				<label for="responseStatus">Resposta do convênio: </label>
 				<select
 					class="select select-bordered select-sm"
 					bind:value={responseStatus}
-					name="responseStatus"
+					name="responseStatusConvenio"
 				>
 					<option selected value="">Selecione uma resposta do convênio</option>
 					<option value={ResponseStatus.AutorizadoIntegral}
@@ -147,6 +110,7 @@
 					<option value={ResponseStatus.NecessitaJustificativasMaterial}
 						>{ResponseStatus.NecessitaJustificativasMaterial}</option
 					>
+					<option value={ResponseStatus.Negada}>{ResponseStatus.Negada}</option>
 				</select>
 			</div>
 		{/if}
@@ -160,16 +124,13 @@
 			/>
 		</div>
 		<div class="card-actions mt-2 items-center gap-x-4">
-			{#if surgery.currentStep !== CurrentStep.Concluido && surgery.currentStep !== CurrentStep.Suspensa}
+			{#if surgery.currentStep !== CurrentStep.Concluido && surgery.currentStep !== CurrentStep.Suspensa && profile !== Profile.Medico}
 				<button
 					on:click={handleNextStep}
-					disabled={(surgery.currentStep === CurrentStep.DocsEnviadosHJS &&
-						!specialMaterialsNo &&
-						!specialMaterialsYes) ||
-						((surgery.currentStep === CurrentStep.RespostaConvenio ||
-							surgery.currentStep === CurrentStep.RespostaJustificativas ||
-							surgery.currentStep === CurrentStep.RetornoOPME) &&
-							responseStatus.length === 0)}
+					disabled={(surgery.currentStep === CurrentStep.RespostaConvenio ||
+						surgery.currentStep === CurrentStep.RespostaJustificativas ||
+						surgery.currentStep === CurrentStep.RetornoOPME) &&
+						responseStatus.length === 0}
 					class="btn btn-success btn-sm">Atendido</button
 				>
 			{/if}

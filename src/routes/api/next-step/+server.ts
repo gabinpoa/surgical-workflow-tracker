@@ -46,12 +46,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
 		let currentStep = steps[steps.findIndex((el) => el === data.surgery.currentStep) + 1];
 
-		if (
-			data.surgery.currentStep === CurrentStep.DocsEnviadosHJS &&
-			stepHistoryBody.responseStatus === false
-		) {
-			currentStep = CurrentStep.DocsEnviadosConvenio;
-		} else if (data.surgery.currentStep === CurrentStep.RespostaConvenio) {
+		if (data.surgery.currentStep === CurrentStep.RespostaConvenio) {
 			if (
 				data.responseStatus === ResponseStatus.AutorizadoIntegral ||
 				data.responseStatus === ResponseStatus.AutorizadoParcial
@@ -63,6 +58,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		} else if (data.surgery.currentStep === CurrentStep.RetornoOPME) {
 			if (data.responseStatus === ResponseStatus.EncaminhadoConvenio) {
 				currentStep = CurrentStep.DocsEnviadosConvenio;
+			} else if (data.responseStatus === ResponseStatus.Negada) {
+				currentStep = CurrentStep.Suspensa;
 			}
 		} else if (data.surgery.currentStep === CurrentStep.EnvioJustificativasOPME) {
 			currentStep = CurrentStep.RetornoOPME;
