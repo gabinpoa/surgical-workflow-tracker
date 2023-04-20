@@ -57,7 +57,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			}
 		} else if (data.surgery.currentStep === CurrentStep.RetornoOPME) {
 			if (data.responseStatus === ResponseStatus.EncaminhadoConvenio) {
-				currentStep = CurrentStep.DocsEnviadosConvenio;
+				currentStep = CurrentStep.RespostaConvenio;
 			} else if (data.responseStatus === ResponseStatus.Negada) {
 				currentStep = CurrentStep.Suspensa;
 			}

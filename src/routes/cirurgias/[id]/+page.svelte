@@ -18,6 +18,14 @@
 			class="flex flex-col items-center flex-1 rounded-xl bg-white p-6 pt-9 w-1/2 gap-y-8 max-w-4xl"
 		>
 			<div class="w-full space-y-6">
+				<div class="flex justify-center gap-x-4 items-center">
+					<a href="/nova-cirurgia" class="btn capitalize">Criar novo registro</a>
+					<a
+						target="_blank"
+						class="btn btn-outline btn-primary bg-transparent capitalize"
+						href="https://agendamentohsj.secure.simplybook.me/v2/">Agendar cirurgia</a
+					>
+				</div>
 				<div class="card card-bordered shadow mb-10">
 					<div class="card-body">
 						<div class="flex items-center gap-x-6">
