@@ -13,7 +13,12 @@
 <div class="min-h-screen flex justify-center items-center bg-pattern bg-contain bg-fixed">
 	<main class="bg-white rounded-xl">
 		<div class="p-4 pt-6 overflow-hidden grid gap-4 lg:w-96 lg:gap-6">
-			<h1 class="font-crimsontext text-lg lg:mb-2">ORBITS</h1>
+			<div class=" lg:mb-2">
+				<h1 class="font-crimsontext text-lg">ORBITS</h1>
+				<h1 class="text-sm text-neutral max-w-[32ch]">
+					Operating Room Booking and Integrated Tracking System
+				</h1>
+			</div>
 			<h1 class="text-2xl font-semibold text-neutral-800">Login</h1>
 			<form method="POST" class="flex-col flex gap-y-3">
 				<TextInput
