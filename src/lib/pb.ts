@@ -57,7 +57,6 @@ export enum Profile {
 export class StepHistoryRecord extends Record {
 	user!: string;
 	surgery!: string;
-	informedDate!: string | undefined;
 	step!: CurrentStep;
 	responseStatus!: ResponseStatus | undefined;
 }

@@ -17,13 +17,6 @@
 				{pbStringDateToDate(step.created).toLocaleString()}
 			</span>
 		</p>
-		{#if step.informedDate}
-			<p class="font-light">
-				Data informada: <span class="font-normal">
-					{pbStringDateToDate(step.informedDate).toLocaleString('pt-BR', { hour12: false })}
-				</span>
-			</p>
-		{/if}
 		{#if step.responseStatus}
 			<p class="font-light">
 				{step.step === CurrentStep.RetornoOPME

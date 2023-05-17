@@ -12,9 +12,6 @@
 	export let updateSurgeries: (response: SurgeryRecord[]) => void;
 	export let filter: Filter;
 
-	const initialDate = new Date();
-	initialDate.setMinutes(0, 0, 0);
-	let informedDate = initialDate.toISOString().slice(0, -1);
 	let responseStatus = '';
 	let loading = false;
 
@@ -25,7 +22,6 @@
 				currentStep: surgery.currentStep,
 				id: surgery.id
 			},
-			informedDate,
 			responseStatus,
 			filter
 		};
@@ -42,6 +38,7 @@
 
 		updateSurgeries(response);
 		loading = false;
+		responseStatus = '';
 	}
 </script>
 
@@ -114,15 +111,6 @@
 				</select>
 			</div>
 		{/if}
-		<div>
-			<label for="informedDate">Selecione data e hora: </label>
-			<input
-				name="informed-date"
-				class="input input-bordered input-sm"
-				bind:value={informedDate}
-				type="datetime-local"
-			/>
-		</div>
 		<div class="card-actions mt-2 items-center gap-x-4">
 			{#if surgery.currentStep !== CurrentStep.Concluido && surgery.currentStep !== CurrentStep.Suspensa && profile !== Profile.Medico}
 				<button
@@ -130,7 +118,15 @@
 					disabled={(surgery.currentStep === CurrentStep.RespostaConvenio ||
 						surgery.currentStep === CurrentStep.RespostaJustificativas ||
 						surgery.currentStep === CurrentStep.RetornoOPME) &&
-						responseStatus.length === 0}
+						![
+							String(ResponseStatus.Autorizada),
+							String(ResponseStatus.AutorizadoParcial),
+							String(ResponseStatus.AutorizadoIntegral),
+							String(ResponseStatus.EncaminhadoConvenio),
+							String(ResponseStatus.NecessitaJustificativasMaterial),
+							String(ResponseStatus.Negada),
+							String(ResponseStatus.NovasJustificativas)
+						].includes(responseStatus)}
 					class="btn btn-success btn-sm">Atendido</button
 				>
 			{/if}
