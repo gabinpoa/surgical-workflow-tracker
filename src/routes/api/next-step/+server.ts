@@ -16,7 +16,6 @@ export interface NextStepRequestBody {
 		currentStep: CurrentStep;
 		id: string;
 	};
-	informedDate: string;
 	responseStatus: string | boolean;
 	filter: string;
 }
@@ -27,13 +26,11 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		const stepHistoryBody: {
 			user: string;
 			surgery: string;
-			informedDate: string;
 			step: CurrentStep;
 			responseStatus?: string | boolean;
 		} = {
 			user: locals.pb.authStore.model?.id as string,
 			surgery: data.surgery.id,
-			informedDate: data.informedDate,
 			step: data.surgery.currentStep
 		};
 		if (
@@ -46,6 +43,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
 		let currentStep = steps[steps.findIndex((el) => el === data.surgery.currentStep) + 1];
 
+		// Por padrão se avança uma etapa, mas existem as exceções
 		if (data.surgery.currentStep === CurrentStep.RespostaConvenio) {
 			if (
 				data.responseStatus === ResponseStatus.AutorizadoIntegral ||

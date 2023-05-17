@@ -60,11 +60,12 @@
 		<div>
 			<Label name="patient" title="Paciente" />
 			<input
+				autocapitalize="sentences"
 				name="patient"
 				bind:value={patient}
 				placeholder="Digite o nome do paciente"
 				type="text"
-				class="input w-full text-sm font-semibold input-bordered"
+				class="input w-full text-sm placeholder:[text-transform:none;] capitalize font-semibold input-bordered"
 			/>
 		</div>
 		<div>

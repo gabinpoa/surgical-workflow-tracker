@@ -68,11 +68,11 @@ export const surgeonNames = [
 	'Tobias Ludwig'
 ];
 export enum CurrentStep {
-	Criacao = 'Criação',
-	SolicitadoOPME = 'Solicitar orçamento OPME',
+	Criacao = 'Enviado guias para a secretária',
+	SolicitadoOPME = 'Solicitado orçamento OPME',
 	RetornoOPME = 'Resposta da cotação OPME',
 	EnvioJustificativasOPME = 'Envio de justificativas OPME',
-	DocsEnviadosConvenio = 'Encaminhar documentos para convênio',
+	DocsEnviadosConvenio = 'Encaminhado documentos para convênio',
 	RespostaConvenio = 'Resposta do convênio',
 	EnvioJustificativas = 'Envio de Justificativas/documentos',
 	RespostaJustificativas = 'Resposta após justificativa',
