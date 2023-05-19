@@ -15,10 +15,10 @@
 	<div class="flex items-center flex-col min-h-screen bg-pattern bg-contain bg-fixed pt-9 pb-6">
 		<BackToHome />
 		<main
-			class="flex flex-col items-center flex-1 rounded-xl bg-white p-6 pt-9 w-1/2 gap-y-8 max-w-4xl"
+			class="flex flex-col items-center flex-1 rounded-xl bg-white sm:p-6 p-2 pt-9 gap-y-8 max-w-4xl"
 		>
 			<div class="w-full space-y-6">
-				<div class="flex justify-center gap-x-4 items-center">
+				<div class="flex justify-center gap-2 md:gap-4 items-center flex-wrap">
 					<a href="/nova-cirurgia" class="btn capitalize">Criar novo registro</a>
 					<a
 						target="_blank"
@@ -26,9 +26,9 @@
 						href="https://agendamentohsj.secure.simplybook.me/v2/">Agendar cirurgia</a
 					>
 				</div>
-				<div class="card card-bordered shadow mb-10">
+				<div class="card card-bordered card-compact sm:card-normal shadow mb-10">
 					<div class="card-body">
-						<div class="flex items-center gap-x-6">
+						<div class="flex items-center gap-x-6 flex-wrap">
 							<h3 class="card-title capitalize">{surgery.surgeryName}</h3>
 							<div class="tooltip tooltip-bottom" data-tip="Progresso">
 								<progress

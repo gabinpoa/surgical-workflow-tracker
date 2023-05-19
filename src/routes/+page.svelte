@@ -14,21 +14,30 @@
 	let filter: Filter = Filter.OnGoing;
 </script>
 
-<a href="/login" class="absolute top-20 right-20 bg-black bg-opacity-90 btn btn-circle p-2">
+<a
+	href="/login"
+	class="absolute hidden sm:[display:unset;] top-20 right-20 bg-black bg-opacity-90 btn btn-circle p-2"
+>
 	<IoIosLogOut />
 </a>
 <div class="flex items-center flex-col min-h-screen bg-pattern bg-fixed bg-contain">
-	<div class="h-44 flex items-center relative">
-		<div class="bg-black text-white text-2xl bg-opacity-80 font-semibold p-3 rounded-xl">
+	<div class="h-44 flex items-center">
+		<div class="bg-black text-white relative text-2xl bg-opacity-80 font-semibold p-3 rounded-xl">
 			<h1>Bem-vindo(a),</h1>
 			<h1>{data.user.profile === Profile.Medico ? 'Dr. ' + data.user.name : data.user.name}</h1>
+			<a
+				href="/login"
+				class="absolute sm:hidden -top-4 -right-4 bg-black bg-opacity-90 btn btn-circle p-2"
+			>
+				<IoIosLogOut />
+			</a>
 		</div>
 	</div>
 	<main
-		class="flex flex-col items-center flex-1 rounded-t-xl bg-white p-6 pt-10 w-1/2 gap-y-8 max-w-4xl"
+		class="flex flex-col items-center flex-1 rounded-t-xl bg-white pb-14 sm:pb-4 sm:p-4 pt-10 gap-y-8"
 	>
 		<MainButtons />
-		<div class="btn-group">
+		<div class="flex justify-center lg:btn-group flex-wrap gap-2 lg:gap-0">
 			<button
 				on:click={() => {
 					filter = Filter.OnGoing;

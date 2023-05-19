@@ -34,9 +34,10 @@
 	"type": "module",
 	"dependencies": {
 		"@aws-sdk/client-ses": "^3.306.0",
+		"aws-sdk": "^2.1380.0",
 		"daisyui": "^2.51.5",
 		"dotenv": "^16.0.3",
-		"nodemailer": "^6.9.1",
+		"nodemailer": "^6.9.2",
 		"pocketbase": "^0.13.1",
 		"svelte-icons": "^2.1.0"
 	}
