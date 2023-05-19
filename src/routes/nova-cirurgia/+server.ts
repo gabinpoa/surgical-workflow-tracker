@@ -51,7 +51,14 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 		await locals.pb.collection('stepHistory').create<StepHistoryRecord>({
 			user: locals.pb.authStore.model?.id,
 			surgery: createdSurgery.id,
-			step: CurrentStep.Criacao
+			step: CurrentStep.Criacao,
+			files: data.files
+				.reduce((acc, file): string => {
+					return acc + ' ' + file.filename;
+				}, '')
+				.trimStart()
+				.split(' ')
+				.join(', ')
 		});
 
 		await sendSesMail(

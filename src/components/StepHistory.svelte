@@ -26,5 +26,10 @@
 					: 'Resposta do convênio: '}<span class="font-normal">{step.responseStatus}</span>
 			</p>
 		{/if}
+		{#if step.files}
+			<p class="font-light max-w-[60ch]">
+				Arquivos enviados: <span class="font-normal">{step.files}</span>
+			</p>
+		{/if}
 	</div>
 </div>
