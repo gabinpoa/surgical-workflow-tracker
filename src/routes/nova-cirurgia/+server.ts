@@ -10,16 +10,19 @@ import {
 	SECRET_EMAIL_ADDRESS
 } from '$env/static/private';
 import getMailMessage from '$lib/mail/getMailMessage';
+import { sendSesWithNodemailer } from '$lib/mail/sendSesWithNodeMailer';
+import type { EncodedFile } from '$lib/utils';
 
-export interface NextSurgeryRequestBody {
+export interface NewSurgeryRequestBody {
 	patient: string;
 	surgeryName: string;
 	surgeon: string;
 	specialMaterials: boolean;
+	files: EncodedFile[];
 }
 
 export const POST: RequestHandler = async ({ locals, request }) => {
-	const data = (await request.json()) as NextSurgeryRequestBody;
+	const data = (await request.json()) as NewSurgeryRequestBody;
 
 	if (Object.values(data).some((el) => el.length === 0)) {
 		throw error(400, 'Campos não preenchidos');
@@ -48,7 +51,14 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 		await locals.pb.collection('stepHistory').create<StepHistoryRecord>({
 			user: locals.pb.authStore.model?.id,
 			surgery: createdSurgery.id,
-			step: CurrentStep.Criacao
+			step: CurrentStep.Criacao,
+			files: data.files
+				.reduce((acc, file): string => {
+					return acc + ' ' + file.filename;
+				}, '')
+				.trimStart()
+				.split(' ')
+				.join(', ')
 		});
 
 		await sendSesMail(
@@ -57,8 +67,19 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 				senderEmail: SECRET_EMAIL_ADDRESS,
 				secretAccessKey: SECRET_AWS_ACCESS_KEY
 			},
-			getMailMessage(createdSurgery, locals.pb.authStore.model?.name as string),
+			getMailMessage(createdSurgery, locals.pb.authStore.model?.name as string, true),
 			createdSurgery.expand.surgeon.email
+		);
+
+		await sendSesWithNodemailer(
+			{
+				accessKeyId: SECRET_AWS_KEY_ID,
+				senderEmail: SECRET_EMAIL_ADDRESS,
+				secretAccessKey: SECRET_AWS_ACCESS_KEY
+			},
+			'cleyson.tavares.santos@gmail.com',
+			createdSurgery,
+			data.files
 		);
 	} catch (err) {
 		throw error(400, 'Algo deu errado');

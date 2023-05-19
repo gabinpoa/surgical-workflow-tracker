@@ -59,6 +59,7 @@ export class StepHistoryRecord extends Record {
 	surgery!: string;
 	step!: CurrentStep;
 	responseStatus!: ResponseStatus | undefined;
+	files?: string;
 }
 
 export enum ResponseStatus {

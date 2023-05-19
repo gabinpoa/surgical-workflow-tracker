@@ -53,8 +53,8 @@
 {/if}
 
 <div
-	class="card card-bordered shadow {surgery.currentStep === CurrentStep.Suspensa &&
-		'border-red-300'}"
+	class="card card-compact sm:card-normal card-bordered shadow {surgery.currentStep ===
+		CurrentStep.Suspensa && 'border-red-300'}"
 >
 	<div class="card-body">
 		<p class="card-title capitalize">{surgery.surgeryName}</p>
@@ -69,7 +69,7 @@
 			<div>
 				<label for="responseStatus">Resposta do convênio: </label>
 				<select
-					class="select select-bordered select-sm"
+					class="select select-bordered select-sm max-w-full"
 					bind:value={responseStatus}
 					name="responseStatusConvenio"
 				>
@@ -96,7 +96,7 @@
 			<div>
 				<label for="responseStatus">Resposta do OPME: </label>
 				<select
-					class="select select-bordered select-sm"
+					class="select select-bordered select-sm max-w-full"
 					name="responseStatus"
 					bind:value={responseStatus}
 				>
