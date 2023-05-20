@@ -72,7 +72,6 @@ export enum CurrentStep {
 	SolicitadoOPME = 'Solicitado orçamento OPME',
 	RetornoOPME = 'Resposta da cotação OPME',
 	EnvioJustificativasOPME = 'Envio de justificativas OPME',
-	DocsEnviadosConvenio = 'Encaminhado documentos para convênio',
 	RespostaConvenio = 'Resposta do convênio',
 	EnvioJustificativas = 'Envio de Justificativas/documentos',
 	RespostaJustificativas = 'Resposta após justificativa',
@@ -84,7 +83,6 @@ export const steps = [
 	CurrentStep.SolicitadoOPME,
 	CurrentStep.RetornoOPME,
 	CurrentStep.EnvioJustificativasOPME,
-	CurrentStep.DocsEnviadosConvenio,
 	CurrentStep.RespostaConvenio,
 	CurrentStep.EnvioJustificativas,
 	CurrentStep.RespostaJustificativas,
@@ -100,3 +98,38 @@ export enum ResponseStatus {
 	EncaminhadoConvenio = 'Encaminhado para autorização do convênio',
 	NecessitaJustificativasMaterial = 'Necessita justificativa do material'
 }
+export const stepsKeys = steps.keys();
+export const stepsEntries = steps.entries();
+
+export const stepsReversedMap = new Map();
+for (const entries of stepsEntries) {
+	stepsReversedMap.set(entries[1], entries[0]);
+}
+
+const retornoOPMEMap = new Map<ResponseStatus, CurrentStep>();
+retornoOPMEMap.set(ResponseStatus.EncaminhadoConvenio, CurrentStep.RespostaConvenio);
+retornoOPMEMap.set(ResponseStatus.Negada, CurrentStep.Suspensa);
+retornoOPMEMap.set(
+	ResponseStatus.NecessitaJustificativasMaterial,
+	CurrentStep.EnvioJustificativasOPME
+);
+
+const respostaConvenioMap = new Map<ResponseStatus, CurrentStep>();
+respostaConvenioMap.set(ResponseStatus.AutorizadoParcial, CurrentStep.Concluido);
+respostaConvenioMap.set(ResponseStatus.AutorizadoIntegral, CurrentStep.Concluido);
+respostaConvenioMap.set(ResponseStatus.NecessitaJustificativas, CurrentStep.EnvioJustificativas);
+
+const respostaJustificativasMap = new Map<ResponseStatus, CurrentStep>();
+respostaJustificativasMap.set(ResponseStatus.NovasJustificativas, CurrentStep.EnvioJustificativas);
+respostaJustificativasMap.set(ResponseStatus.Negada, CurrentStep.Suspensa);
+respostaJustificativasMap.set(ResponseStatus.AutorizadoIntegral, CurrentStep.Concluido);
+respostaJustificativasMap.set(ResponseStatus.AutorizadoParcial, CurrentStep.Concluido);
+
+export const nextStepMap = new Map<CurrentStep, typeof retornoOPMEMap | CurrentStep>();
+
+nextStepMap.set(CurrentStep.SolicitadoOPME, CurrentStep.RetornoOPME);
+nextStepMap.set(CurrentStep.RetornoOPME, retornoOPMEMap);
+nextStepMap.set(CurrentStep.EnvioJustificativasOPME, CurrentStep.RetornoOPME);
+nextStepMap.set(CurrentStep.RespostaConvenio, respostaConvenioMap);
+nextStepMap.set(CurrentStep.EnvioJustificativas, CurrentStep.RespostaJustificativas);
+nextStepMap.set(CurrentStep.RespostaJustificativas, respostaJustificativasMap);

@@ -1,5 +1,5 @@
 import type { SurgeryRecord } from '$lib/pb';
-import { CurrentStep, ResponseStatus, steps } from '$lib/selectChoices';
+import type { CurrentStep, ResponseStatus } from '$lib/selectChoices';
 import { error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import {
@@ -9,14 +9,14 @@ import {
 } from '$env/static/private';
 import getMailMessage from '$lib/mail/getMailMessage';
 import { sendSesMail } from '$lib/mail/sendSesMail';
-import { Filter } from '$lib/utils';
+import { Filter, getNextStep } from '$lib/utils';
 
 export interface NextStepRequestBody {
 	surgery: {
 		currentStep: CurrentStep;
 		id: string;
 	};
-	responseStatus: string | boolean;
+	responseStatus: ResponseStatus;
 	filter: string;
 }
 
@@ -27,52 +27,25 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			user: string;
 			surgery: string;
 			step: CurrentStep;
-			responseStatus?: string | boolean;
+			responseStatus?: ResponseStatus;
 		} = {
 			user: locals.pb.authStore.model?.id as string,
 			surgery: data.surgery.id,
 			step: data.surgery.currentStep
 		};
-		if (
-			(typeof data.responseStatus === 'string' && data.responseStatus.length > 0) ||
-			typeof data.responseStatus === 'boolean'
-		) {
+
+		if (data.responseStatus) {
 			stepHistoryBody.responseStatus = data.responseStatus;
 		}
+
 		await locals.pb.collection('stepHistory').create(stepHistoryBody);
 
-		let currentStep = steps[steps.findIndex((el) => el === data.surgery.currentStep) + 1];
-
-		// Por padrão se avança uma etapa, mas existem as exceções
-		if (data.surgery.currentStep === CurrentStep.RespostaConvenio) {
-			if (
-				data.responseStatus === ResponseStatus.AutorizadoIntegral ||
-				data.responseStatus === ResponseStatus.AutorizadoParcial
-			) {
-				currentStep = CurrentStep.Concluido;
-			} else if (data.responseStatus === ResponseStatus.Negada) {
-				currentStep = CurrentStep.Suspensa;
-			}
-		} else if (data.surgery.currentStep === CurrentStep.RetornoOPME) {
-			if (data.responseStatus === ResponseStatus.EncaminhadoConvenio) {
-				currentStep = CurrentStep.RespostaConvenio;
-			} else if (data.responseStatus === ResponseStatus.Negada) {
-				currentStep = CurrentStep.Suspensa;
-			}
-		} else if (data.surgery.currentStep === CurrentStep.EnvioJustificativasOPME) {
-			currentStep = CurrentStep.RetornoOPME;
-		} else if (data.surgery.currentStep === CurrentStep.RespostaJustificativas) {
-			if (data.responseStatus === ResponseStatus.NovasJustificativas) {
-				currentStep = CurrentStep.EnvioJustificativas;
-			} else if (data.responseStatus === ResponseStatus.Negada) {
-				currentStep = CurrentStep.Suspensa;
-			}
-		}
+		let nextStep = getNextStep(data.surgery.currentStep, data.responseStatus);
 
 		const updatedSurgery = await locals.pb.collection('surgeries').update<SurgeryRecord>(
 			data.surgery.id,
 			{
-				currentStep: currentStep
+				currentStep: nextStep
 			},
 			{
 				expand: 'surgeon'

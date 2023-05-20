@@ -1,3 +1,7 @@
+import { CurrentStep, nextStepMap } from '$lib/selectChoices';
+import type { ResponseStatus } from '$lib/selectChoices';
+import { error } from '@sveltejs/kit';
+
 export enum Filter {
 	OnGoing = 'ongoing',
 	All = 'all',
@@ -49,3 +53,18 @@ export const multipleFilesToBase64 = async (fileList: FileList): Promise<Encoded
 		throw new Error('Não foi possivel converter arquivos');
 	}
 };
+
+export function getNextStep(currentStep: CurrentStep, response?: ResponseStatus): CurrentStep {
+	const firstStep = nextStepMap.get(currentStep);
+
+	if (typeof firstStep === 'string') {
+		return firstStep;
+	} else if (response && typeof firstStep === 'object') {
+		const secondStep = firstStep.get(response);
+
+		if (secondStep) {
+			return secondStep;
+		}
+	}
+	throw error(500, { message: 'Não foi possível encontrar etapa' });
+}

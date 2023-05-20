@@ -1,6 +1,7 @@
 import { Profile, serializeNonPOJOs, type SurgeryRecord } from '$lib/pb';
 import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
+import { stepsEntries, stepsKeys, stepsReversedMap } from '$lib/selectChoices';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (!locals.pb.authStore.isValid || locals.pb.authStore.model === null) {

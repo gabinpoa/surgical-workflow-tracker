@@ -124,6 +124,7 @@
 							String(ResponseStatus.AutorizadoIntegral),
 							String(ResponseStatus.EncaminhadoConvenio),
 							String(ResponseStatus.NecessitaJustificativasMaterial),
+							String(ResponseStatus.NecessitaJustificativas),
 							String(ResponseStatus.Negada),
 							String(ResponseStatus.NovasJustificativas)
 						].includes(responseStatus)}
