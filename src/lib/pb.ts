@@ -1,6 +1,6 @@
 import { browser } from '$app/environment';
 import PocketBase, { Admin, BaseAuthStore, Record } from 'pocketbase';
-import type { CurrentStep } from './selectChoices';
+import type { CurrentStep, ResponseStatus } from './selectChoices';
 
 export class CustomAuthStore extends BaseAuthStore {
 	loadFromLocalStorage(): void {
@@ -60,12 +60,6 @@ export class StepHistoryRecord extends Record {
 	step!: CurrentStep;
 	responseStatus!: ResponseStatus | undefined;
 	files?: string;
-}
-
-export enum ResponseStatus {
-	Autorizada = 'autorizada',
-	PendenteJustificativas = 'pendenteJustificativas',
-	NovasJustificativas = 'novasJustificativas'
 }
 
 export class DoctorRecord extends Record {
