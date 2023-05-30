@@ -6,7 +6,7 @@
 	import BackToHome from '../../components/BackToHome.svelte';
 	import { goto } from '$app/navigation';
 	import type { NewSurgeryRequestBody } from './+server';
-	import { fileToBase64, multipleFilesToBase64, toBase64 } from '$lib/utils';
+	import { fileToBase64, multipleFilesToBase64 } from '$lib/utils';
 
 	export let data: PageData;
 	let patient = '';
@@ -27,19 +27,17 @@
 		surgeryName.length === 0 ||
 		surgeon.length === 0 ||
 		(!yesBox && !noBox) ||
-		!files ||
 		filesSize > 1000 * 1000 * 10;
 
 	async function handleSubmit() {
 		loading = true;
 
-		if (files) {
 			const body: NewSurgeryRequestBody = {
 				patient,
 				surgeryName,
 				surgeon,
 				specialMaterials: yesBox,
-				files: await multipleFilesToBase64(files)
+				files: files && await multipleFilesToBase64(files) || null
 			};
 			const response = await (
 				await fetch('/nova-cirurgia', {
@@ -54,7 +52,6 @@
 			if (response.success === true) {
 				goto('/');
 			}
-		}
 	}
 </script>
 

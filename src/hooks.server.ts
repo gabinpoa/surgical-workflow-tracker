@@ -1,9 +1,8 @@
-import { serializeNonPOJOs } from '$lib/pb';
-import PocketBase, { Admin, Record } from 'pocketbase';
+import PocketBase from 'pocketbase';
 
 /** @type {import('@sveltejs/kit').Handle} */
 export async function handle({ event, resolve }) {
-	event.locals.pb = new PocketBase('https://wispy-fire-1719.fly.dev/');
+	event.locals.pb = new PocketBase('https://pocketbase-production-50dc.up.railway.app');
 
 	event.locals.pb.authStore.loadFromCookie(event.request.headers.get('cookie') || '');
 
@@ -13,6 +12,7 @@ export async function handle({ event, resolve }) {
 		}
 	} catch (err) {
 		event.locals.pb.authStore.clear();
+		console.error(err)
 	}
 
 	const response = await resolve(event);
