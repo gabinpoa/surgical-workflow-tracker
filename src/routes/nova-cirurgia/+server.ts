@@ -1,6 +1,5 @@
 import { error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { pbDateString } from '$lib/utils/pb.utils';
 import type { StepHistoryRecord, SurgeryRecord } from '$lib/pb';
 import { CurrentStep } from '$lib/selectChoices';
 import { sendSesMail } from '$lib/mail/sendSesMail';
@@ -18,7 +17,7 @@ export interface NewSurgeryRequestBody {
 	surgeryName: string;
 	surgeon: string;
 	specialMaterials: boolean;
-	files: EncodedFile[];
+	files?: EncodedFile[];
 }
 
 export const POST: RequestHandler = async ({ locals, request }) => {
@@ -52,7 +51,7 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 			user: locals.pb.authStore.model?.id,
 			surgery: createdSurgery.id,
 			step: CurrentStep.Criacao,
-			files: data.files
+			files: data.files && data.files
 				.reduce((acc, file): string => {
 					return acc + ' ' + file.filename;
 				}, '')
@@ -71,16 +70,18 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 			createdSurgery.expand.surgeon.email
 		);
 
+		if (data.files) {
 		await sendSesWithNodemailer(
 			{
 				accessKeyId: SECRET_AWS_KEY_ID,
 				senderEmail: SECRET_EMAIL_ADDRESS,
 				secretAccessKey: SECRET_AWS_ACCESS_KEY
 			},
-			'cleyson.tavares.santos@gmail.com',
+				'agendamentohsj@santacasa.org.br',
 			createdSurgery,
 			data.files
 		);
+		}
 	} catch (err) {
 		throw error(400, 'Algo deu errado');
 	}
