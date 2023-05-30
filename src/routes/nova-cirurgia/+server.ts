@@ -17,13 +17,13 @@ export interface NewSurgeryRequestBody {
 	surgeryName: string;
 	surgeon: string;
 	specialMaterials: boolean;
-	files?: EncodedFile[];
+	files: EncodedFile[] | null
 }
 
 export const POST: RequestHandler = async ({ locals, request }) => {
 	const data = (await request.json()) as NewSurgeryRequestBody;
 
-	if (Object.values(data).some((el) => el.length === 0)) {
+	if (Object.values(data).some((el) => el !== null && el.length === 0)) {
 		throw error(400, 'Campos não preenchidos');
 	}
 
@@ -83,6 +83,7 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 		);
 		}
 	} catch (err) {
+		console.log(err)
 		throw error(400, 'Algo deu errado');
 	}
 

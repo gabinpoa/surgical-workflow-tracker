@@ -32,13 +32,12 @@
 	async function handleSubmit() {
 		loading = true;
 
-		if (files) {
 			const body: NewSurgeryRequestBody = {
 				patient,
 				surgeryName,
 				surgeon,
 				specialMaterials: yesBox,
-				files: await multipleFilesToBase64(files)
+				files: files && await multipleFilesToBase64(files) || null
 			};
 			const response = await (
 				await fetch('/nova-cirurgia', {
@@ -53,7 +52,6 @@
 			if (response.success === true) {
 				goto('/');
 			}
-		}
 	}
 </script>
 
