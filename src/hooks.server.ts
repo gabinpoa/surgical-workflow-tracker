@@ -2,7 +2,7 @@ import PocketBase from 'pocketbase';
 
 /** @type {import('@sveltejs/kit').Handle} */
 export async function handle({ event, resolve }) {
-	event.locals.pb = new PocketBase('https://pocketbase-production-50dc.up.railway.app');
+	event.locals.pb = new PocketBase('https://pb-workflow.fly.dev');
 
 	event.locals.pb.authStore.loadFromCookie(event.request.headers.get('cookie') || '');
 
