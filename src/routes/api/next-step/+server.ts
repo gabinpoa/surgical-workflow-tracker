@@ -9,7 +9,7 @@ import {
 } from '$env/static/private';
 import getMailMessage from '$lib/mail/getMailMessage';
 import { sendSesMail } from '$lib/mail/sendSesMail';
-import { Filter, getNextStep } from '$lib/utils';
+import {  getNextStep } from '$lib/utils';
 
 export interface NextStepRequestBody {
 	surgery: {
@@ -40,7 +40,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
 		await locals.pb.collection('stepHistory').create(stepHistoryBody);
 
-		let nextStep = getNextStep(data.surgery.currentStep, data.responseStatus);
+		const nextStep = getNextStep(data.surgery.currentStep, data.responseStatus);
 
 		const updatedSurgery = await locals.pb.collection('surgeries').update<SurgeryRecord>(
 			data.surgery.id,
@@ -52,12 +52,12 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			}
 		);
 
-		let surgeries = await locals.pb.collection('surgeries').getFullList<SurgeryRecord>({
+		const surgeries = await locals.pb.collection('surgeries').getFullList<SurgeryRecord>({
 			expand: 'surgeon',
 			sort: '-created'
 		});
 
-		await sendSesMail(
+		sendSesMail(
 			{
 				accessKeyId: SECRET_AWS_KEY_ID,
 				senderEmail: SECRET_EMAIL_ADDRESS,

@@ -17,7 +17,7 @@ export const toBase64 = (file: File): Promise<string> =>
 	});
 
 export const fileToBase64 = (file: File): Promise<string> =>
-	new Promise((resolve, reject) => {
+	new Promise((resolve) => {
 		const reader = new FileReader();
 		reader.onload = (event) => {
 			let encoded = event.target?.result?.toString().replace(/^data:(.*,)?/, '');
@@ -37,7 +37,7 @@ export interface EncodedFile {
 
 export const multipleFilesToBase64 = async (fileList: FileList): Promise<EncodedFile[]> => {
 	try {
-		let encodedFiles: EncodedFile[] = [];
+		const encodedFiles: EncodedFile[] = [];
 
 		for (let index = 0; index < fileList.length; index++) {
 			encodedFiles.push({

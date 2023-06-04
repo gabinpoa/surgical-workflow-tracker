@@ -17,7 +17,7 @@ export interface NewSurgeryRequestBody {
 	surgeryName: string;
 	surgeon: string;
 	specialMaterials: boolean;
-	files: EncodedFile[] | null
+	files: EncodedFile[] | null;
 }
 
 export const POST: RequestHandler = async ({ locals, request }) => {
@@ -51,16 +51,18 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 			user: locals.pb.authStore.model?.id,
 			surgery: createdSurgery.id,
 			step: CurrentStep.Criacao,
-			files: data.files && data.files
-				.reduce((acc, file): string => {
-					return acc + ' ' + file.filename;
-				}, '')
-				.trimStart()
-				.split(' ')
-				.join(', ')
+			files:
+				data.files &&
+				data.files
+					.reduce((acc, file): string => {
+						return acc + ' ' + file.filename;
+					}, '')
+					.trimStart()
+					.split(' ')
+					.join(', ')
 		});
 
-		await sendSesMail(
+		sendSesMail(
 			{
 				accessKeyId: SECRET_AWS_KEY_ID,
 				senderEmail: SECRET_EMAIL_ADDRESS,
@@ -71,19 +73,19 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 		);
 
 		if (data.files) {
-		await sendSesWithNodemailer(
-			{
-				accessKeyId: SECRET_AWS_KEY_ID,
-				senderEmail: SECRET_EMAIL_ADDRESS,
-				secretAccessKey: SECRET_AWS_ACCESS_KEY
-			},
+			sendSesWithNodemailer(
+				{
+					accessKeyId: SECRET_AWS_KEY_ID,
+					senderEmail: SECRET_EMAIL_ADDRESS,
+					secretAccessKey: SECRET_AWS_ACCESS_KEY
+				},
 				'agendamentohsj@santacasa.org.br',
-			createdSurgery,
-			data.files
-		);
+				createdSurgery,
+				data.files
+			);
 		}
 	} catch (err) {
-		console.log(err)
+		console.log(err);
 		throw error(400, 'Algo deu errado');
 	}
 

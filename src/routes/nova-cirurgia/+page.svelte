@@ -57,7 +57,7 @@
 
 {#if loading}
 	<div
-		class="absolute z-10 flex items-center justify-center top-0 bottom-0 right-0 left-0 bg-white bg-opacity-60"
+		class="absolute z-20 flex items-center justify-center top-0 bottom-0 right-0 left-0 bg-white bg-opacity-60"
 	>
 		<div class="animate-spin w-20">
 			<FaSpinner />
